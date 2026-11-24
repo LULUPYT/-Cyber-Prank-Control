@@ -1,0 +1,288 @@
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#090711">
+<title>Cyber Prank Control</title>
+<style>
+*{box-sizing:border-box}
+body{
+ margin:0;background:#090711;color:white;
+ font-family:Arial,sans-serif;
+ min-height:100vh;
+ background-image:radial-gradient(circle at 50% 0%,#30102e,transparent 55%);
+}
+.container{max-width:850px;margin:auto;padding:25px 16px}
+header{text-align:center;padding:25px 0}
+.logo{font-size:25px;font-weight:900;letter-spacing:4px}
+.logo span{color:#ff398c}
+h1{font-size:36px}
+h2{font-size:19px}
+.card{
+ background:#15111f;border:1px solid #39253f;
+ border-radius:17px;padding:20px;margin:18px 0;
+ box-shadow:0 10px 40px #0005;
+}
+label{display:block;color:#aaa;margin:15px 0 7px;font-size:13px}
+input,textarea,select{
+ width:100%;padding:13px;border-radius:10px;
+ background:#090811;border:1px solid #42334c;
+ color:white;font-size:15px;outline:none;
+}
+textarea{min-height:90px;resize:vertical}
+button{
+ padding:13px 18px;border:0;border-radius:10px;
+ background:linear-gradient(100deg,#ff398c,#a44cff);
+ color:white;font-weight:bold;font-size:14px;
+ cursor:pointer;margin-top:12px;
+}
+button:active{transform:scale(.97)}
+.secondary{background:#292137}
+.full{width:100%}
+.preview{
+ text-align:center;padding:40px 15px;
+ border-radius:15px;background:#0b0913;
+ border:1px solid #372541;overflow:hidden;
+}
+.orb{
+ width:75px;height:75px;border:2px solid #ff398c;
+ border-radius:50%;margin:0 auto 20px;
+ display:grid;place-items:center;font-size:30px;
+ color:#ff398c;box-shadow:0 0 30px #ff398c66;
+ animation:pulse 2s infinite;
+}
+@keyframes pulse{50%{box-shadow:0 0 45px #ff398c}}
+.neon{color:#ff398c}
+.hidden{display:none!important}
+#terminal{
+ background:#050909;color:#69ffb0;
+ padding:18px;border-radius:12px;
+ font:13px/2 monospace;text-align:left;
+ white-space:pre-wrap;margin-top:20px;
+ border:1px solid #24523d;
+}
+.message{
+ background:#21192d;border:1px solid #75416c;
+ border-radius:14px;padding:18px;margin-top:20px;
+ text-align:left;animation:appear .7s;
+}
+@keyframes appear{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
+.small{color:#aaa;font-size:12px}
+a{color:#65eaff;word-break:break-all}
+</style>
+</head>
+<body>
+<div class="container">
+
+<header>
+ <div class="logo">CYBER<span>PRANK</span></div>
+ <p class="small">CONTROL CENTER • VERSION 1.0</p>
+</header>
+
+<main id="admin">
+ <div class="card">
+  <h1>Создание сценария</h1>
+  <p class="small">Настрой свою интерактивную историю.</p>
+
+  <label>Название сценария</label>
+  <input id="title" value="Секретное сообщение">
+
+  <label>Вопрос</label>
+  <input id="question" value="Ты хочешь узнать кое-что интересное?">
+
+  <label>Отправитель</label>
+  <input id="sender" value="НН">
+
+  <label>Текст сообщения</label>
+  <textarea id="message">Ты думал, что это просто обычная ссылка?</textarea>
+
+  <label>Финальное сообщение</label>
+  <input id="ending" value="Это была шутка!">
+
+  <label>Цветовая тема</label>
+  <select id="theme">
+   <option value="pink">Neon Pink</option>
+   <option value="red">Cyber Red</option>
+   <option value="cyan">Black & Cyan</option>
+   <option value="purple">Purple Glitch</option>
+  </select>
+
+  <button class="full" onclick="createLink()">СОЗДАТЬ ССЫЛКУ</button>
+ </div>
+
+ <div class="card">
+  <h2>Предпросмотр</h2>
+  <div class="preview">
+   <div class="orb">⌁</div>
+   <h2 id="previewTitle">Секретное сообщение</h2>
+   <p id="previewQuestion">Ты хочешь узнать кое-что интересное?</p>
+   <span class="small">CYBER EXPERIENCE</span>
+  </div>
+ </div>
+
+ <div class="card">
+  <h2>Твоя ссылка</h2>
+  <div id="result" class="small">Пока ссылок нет.</div>
+ </div>
+</main>
+
+<section id="experience" class="hidden">
+ <div class="card preview">
+  <div class="orb">⌁</div>
+  <p class="neon">INCOMING TRANSMISSION</p>
+  <h1 id="expTitle"></h1>
+  <p id="expQuestion"></p>
+  <button id="openButton" onclick="startExperience()">ОТКРЫТЬ</button>
+
+  <div id="terminal" class="hidden"></div>
+
+  <div id="incoming" class="message hidden">
+   <span class="neon">НОВОЕ СООБЩЕНИЕ</span>
+   <h3 id="expSender"></h3>
+   <p id="expMessage"></p>
+  </div>
+
+  <h2 id="expEnding" class="hidden neon"></h2>
+
+  <button class="secondary full" onclick="closeExperience()">
+   ЗАКРЫТЬ СЦЕНАРИЙ
+  </button>
+ </div>
+</section>
+
+</div>
+
+<script>
+const $=id=>document.getElementById(id);
+
+function getData(){
+ return {
+  title:$('title').value,
+  question:$('question').value,
+  sender:$('sender').value,
+  message:$('message').value,
+  ending:$('ending').value,
+  theme:$('theme').value
+ };
+}
+
+function encode(obj){
+ return btoa(unescape(encodeURIComponent(JSON.stringify(obj))))
+ .replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
+}
+
+function decode(str){
+ str=str.replace(/-/g,'+').replace(/_/g,'/');
+ while(str.length%4)str+='=';
+ return JSON.parse(decodeURIComponent(escape(atob(str))));
+}
+
+function createLink(){
+ const data=getData();
+ const url=location.href.split('#')[0]+'#scenario='+encode(data);
+ $('result').innerHTML='';
+
+ const link=document.createElement('a');
+ link.href=url;
+ link.textContent=url;
+
+ const copy=document.createElement('button');
+ copy.textContent='КОПИРОВАТЬ ССЫЛКУ';
+ copy.className='full';
+ copy.onclick=async()=>{
+  try{
+   await navigator.clipboard.writeText(url);
+   copy.textContent='СКОПИРОВАНО!';
+  }catch(e){
+   prompt('Скопируй ссылку:',url);
+  }
+ };
+
+ $('result').append(link,document.createElement('br'),copy);
+}
+
+function showExperience(data){
+ $('admin').classList.add('hidden');
+ $('experience').classList.remove('hidden');
+
+ $('expTitle').textContent=data.title;
+ $('expQuestion').textContent=data.question;
+ $('expSender').textContent=data.sender;
+ $('expMessage').textContent=data.message;
+ $('expEnding').textContent=data.ending;
+
+ const colors={
+  pink:'#ff398c',
+  red:'#ff3030',
+  cyan:'#57e8ff',
+  purple:'#b77bff'
+ };
+
+ document.documentElement.style.setProperty(
+  '--accent',colors[data.theme]||colors.pink
+ );
+
+ document.querySelectorAll('.orb').forEach(x=>{
+  x.style.borderColor=colors[data.theme]||colors.pink;
+  x.style.color=colors[data.theme]||colors.pink;
+ });
+}
+
+function startExperience(){
+ $('openButton').classList.add('hidden');
+ $('terminal').classList.remove('hidden');
+
+ const lines=[
+  '> Инициализация визуального сценария...',
+  '> Загрузка эффектов...',
+  '> Подготовка входящего сообщения...',
+  '> Канал визуализации готов.',
+  '> Это постановочная анимация.'
+ ];
+
+ let i=0;
+ const timer=setInterval(()=>{
+  $('terminal').textContent+=lines[i]+'\n';
+  i++;
+  if(i>=lines.length){
+   clearInterval(timer);
+   setTimeout(()=>{
+    $('incoming').classList.remove('hidden');
+   },700);
+   setTimeout(()=>{
+    $('expEnding').classList.remove('hidden');
+   },2200);
+  }
+ },650);
+}
+
+function closeExperience(){
+ location.hash='';
+ $('experience').classList.add('hidden');
+ $('admin').classList.remove('hidden');
+ $('terminal').classList.add('hidden');
+ $('incoming').classList.add('hidden');
+ $('expEnding').classList.add('hidden');
+ $('openButton').classList.remove('hidden');
+}
+
+['title','question'].forEach(id=>{
+ $(id).addEventListener('input',()=>{
+  $('previewTitle').textContent=$('title').value;
+  $('previewQuestion').textContent=$('question').value;
+ });
+});
+
+if(location.hash.startsWith('#scenario=')){
+ try{
+  const data=decode(location.hash.substring(10));
+  showExperience(data);
+ }catch(e){
+  document.body.innerHTML='<h2 style="text-align:center;padding:40px">Ссылка повреждена</h2>';
+ }
+}
+</script>
+</body>
+</html>

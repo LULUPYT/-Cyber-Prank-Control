@@ -1,479 +1,270 @@
 
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#090713">
-<title>Cyber Prank Control 2.0</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#170d1b">
+<title>Личное сообщение</title>
 <style>
-:root {
-  --bg:#090713;
-  --panel:#171323;
-  --line:#382c49;
-  --accent:#ff438f;
-  --cyan:#63eaff;
-  --text:#f8f5ff;
-  --muted:#aaa2ba;
-}
+:root{--pink:#ff72b7;--pink2:#e83e91}
 *{box-sizing:border-box}
-body{
- margin:0;background:
- radial-gradient(ellipse at 15% 0%,#42133b 0,transparent 38%),
- radial-gradient(ellipse at 90% 10%,#102b40 0,transparent 35%),
- var(--bg);
- color:var(--text);font:15px system-ui,Arial;min-height:100vh
-}
-button,input,textarea,select{font:inherit}
+html,body{margin:0;min-height:100%;background:#090710;color:#fff;font-family:Georgia,"Times New Roman",serif}
+body{min-height:100svh;background:radial-gradient(ellipse at 50% 18%,#54203f 0,#251126 42%,#090710 100%);overflow-x:hidden}
+button,input{font:inherit}
 button{cursor:pointer}
-.shell{max-width:1150px;margin:auto;padding:22px 16px 50px}
-header{display:flex;justify-content:space-between;gap:12px;align-items:center}
-.logo{font-weight:950;letter-spacing:3px}
-.logo span{color:var(--accent)}
-.status{font-size:11px;color:#9fffc9;border:1px solid #285342;padding:7px 12px;border-radius:30px}
-.hero{padding:40px 0 25px}
-.hero small,.tag{color:var(--cyan);letter-spacing:3px;font-size:10px}
-h1{font-size:clamp(32px,6vw,55px);line-height:1.05;margin:12px 0}
-h1 span{color:var(--accent);text-shadow:0 0 25px #ff438f66}
-.muted{color:var(--muted)}
-.layout{display:grid;grid-template-columns:205px 1fr;gap:16px}
-.nav,.card{
- background:linear-gradient(145deg,#191525ee,#100e19f5);
- border:1px solid var(--line);border-radius:18px;
- box-shadow:0 15px 45px #0005
-}
-.nav{padding:10px;height:max-content;position:sticky;top:12px}
-.nav button{
- display:block;width:100%;text-align:left;border:0;
- background:transparent;color:#c9c2d5;padding:13px;
- border-radius:11px;margin:2px 0
-}
-.nav button.active,.nav button:hover{background:#38213e;color:white}
-.card{padding:20px;margin-bottom:15px}
-.card h2{font-size:18px;margin:0 0 16px}
-.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
-.stat{padding:15px;border:1px solid var(--line);border-radius:13px;background:#0d0b15}
-.stat strong{display:block;font-size:25px}
-.stat small{color:var(--muted)}
-.formgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.field{margin:8px 0}
-.field.full{grid-column:1/-1}
-label{display:block;font-size:12px;color:var(--muted);margin-bottom:6px}
-input,textarea,select{
- width:100%;padding:12px;border:1px solid #40364e;
- border-radius:11px;background:#090812;color:white;outline:none
-}
-textarea{min-height:85px;resize:vertical}
-input:focus,textarea:focus,select:focus{border-color:var(--cyan)}
-.btn{
- border:0;border-radius:11px;padding:12px 16px;
- background:linear-gradient(100deg,var(--accent),#985cff);
- color:white;font-weight:800
-}
-.btn.alt{background:#292235;border:1px solid #493d58}
-.btn.cyan{background:linear-gradient(100deg,#53dff5,#6b9dff);color:#071018}
-.btn.danger{background:#4a1c2d}
-.btnrow{display:flex;gap:9px;flex-wrap:wrap;margin-top:14px}
-.note{
- font-size:12px;color:#d0c6dc;border-left:3px solid var(--accent);
- background:#ff438f0d;padding:11px;margin-top:14px
-}
-.preview{
- min-height:340px;display:grid;place-items:center;text-align:center;
- position:relative;overflow:hidden;padding:25px;
- border:1px solid #47304f;border-radius:16px;
- background:radial-gradient(circle at 50% 40%,#35183d,#090811 70%)
-}
-.preview:before{
- content:"";position:absolute;inset:-100% 0;
- background:repeating-linear-gradient(0deg,transparent 0 4px,#ffffff09 5px);
- animation:scan 8s linear infinite;pointer-events:none
-}
-@keyframes scan{to{transform:translateY(50px)}}
-.previewInner{position:relative;z-index:1;max-width:500px;width:100%}
-.orb{
- width:78px;height:78px;margin:0 auto 20px;
- border:1px solid var(--accent);border-radius:50%;
- display:grid;place-items:center;color:var(--cyan);font-size:30px;
- box-shadow:0 0 30px #ff438f66;
- animation:pulse 2s infinite
-}
-@keyframes pulse{50%{transform:scale(1.07);filter:brightness(1.5)}}
-.preview h2{font-size:25px}
 .hidden{display:none!important}
-.list{display:grid;gap:10px}
-.item{padding:13px;border:1px solid var(--line);border-radius:12px;display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
-.item a{color:var(--cyan);overflow-wrap:anywhere}
-.screen{max-width:800px;margin:5vh auto;padding:16px}
-.terminal{
- background:#05090c;border:1px solid #275344;color:#8fffc5;
- text-align:left;white-space:pre-wrap;padding:16px;border-radius:12px;
- font:13px/1.8 monospace;margin-top:18px
-}
-.incoming{
- max-width:520px;margin:18px auto;background:#1b1426;
- border:1px solid #744078;border-radius:15px;padding:18px;
- text-align:left;animation:pop .6s both
-}
-.from{color:var(--accent);font-size:11px;letter-spacing:2px}
-.incoming p{font-size:18px}
-.letter{
- max-width:520px;margin:18px auto;padding:20px;
- background:linear-gradient(145deg,#f3e8d9,#d7c6b8);
- color:#2b1b22;border-radius:8px;text-align:left;
- animation:pop .8s both
-}
-.letter p{color:#2b1b22}
-@keyframes pop{
- from{opacity:0;transform:translateY(20px) scale(.97)}
- to{opacity:1;transform:none}
-}
-.glitch{animation:glitch .25s steps(2) 3}
-@keyframes glitch{
- 25%{transform:translate(3px,-2px);text-shadow:-3px 0 red}
- 50%{transform:translate(-2px,2px);text-shadow:3px 0 cyan}
-}
-.footer{text-align:center;color:#777185;font-size:11px;padding:20px}
-@media(max-width:740px){
- .layout{grid-template-columns:1fr}
- .nav{position:static;display:grid;grid-template-columns:repeat(3,1fr)}
- .nav button{text-align:center;font-size:12px;padding:10px 4px}
- .formgrid{grid-template-columns:1fr}
- .field.full{grid-column:auto}
- .stats{grid-template-columns:1fr 1fr}
-}
-@media(prefers-reduced-motion:reduce){
- *,*:before,*:after{animation:none!important;transition:none!important}
-}
+#app{min-height:100svh;display:grid;place-items:center;padding:12px}
+.scene{width:min(100%,520px);min-height:calc(100svh - 24px);position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:42px 25px 34px;border:1px solid #a64f7c55;border-radius:25px;background:linear-gradient(155deg,#35162fdd,#170e1ddd 60%,#100b16f2);box-shadow:0 0 80px #d83b8540,inset 0 0 55px #f49bc00b;overflow:hidden}
+.scene:before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent 0 3px,#fff05 4px);opacity:.25;pointer-events:none}
+.scene>*{position:relative;z-index:1}
+.kicker,.smallcap{font:11px/1.6 system-ui,sans-serif;letter-spacing:4px;text-transform:uppercase;color:#ffb7d8;margin:0 0 28px}
+h1{font-size:clamp(30px,8vw,43px);font-weight:400;line-height:1.12;margin:0 0 18px;text-shadow:0 0 24px #ff9bcf66}
+.subtitle{font-size:18px;line-height:1.5;color:#f1dce8;margin:0 0 28px}
+.field{width:100%;max-width:360px;margin:0 auto 15px}
+input{width:100%;height:54px;border:1px solid #ffacd0aa;border-radius:999px;background:#2a1429;color:white;text-align:center;padding:0 18px;outline:none;box-shadow:inset 0 0 18px #ff6bad16}
+input:focus{border-color:#ffd1e5;box-shadow:0 0 25px #ff75b866}
+input::placeholder{color:#d9a9c2}
+.primary{border:0;border-radius:999px;min-height:52px;padding:0 28px;color:#4b1433;font:700 15px system-ui,sans-serif;letter-spacing:.5px;background:linear-gradient(100deg,#ffc2dc,#ff6eae 65%,#f94f9d);box-shadow:0 0 28px #ff64ad99,0 8px 30px #e63d8650;min-width:210px}
+.primary:active{transform:scale(.98)}
+.hint{font:11px/1.5 system-ui,sans-serif;color:#c7a9bc;margin-top:25px}
+.disclose{font:10px system-ui,sans-serif;letter-spacing:1px;color:#c8a6bb;margin-top:22px}
+.envelope{width:min(78vw,280px);height:174px;margin:35px auto 20px;position:relative;border:0;background:linear-gradient(145deg,#ffe7df,#ffc7d5);border-radius:12px;box-shadow:0 0 60px #ffb6d9aa;overflow:hidden}
+.envelope:before{content:"";position:absolute;inset:0;background:linear-gradient(145deg,transparent 49%,#e99bb9 50%),linear-gradient(215deg,transparent 49%,#f5b4c9 50%);clip-path:polygon(0 0,100% 0,50% 65%)}
+.envelope:after{content:"";position:absolute;width:48px;height:48px;left:calc(50% - 24px);top:calc(50% - 24px);border-radius:50%;background:#df4387;box-shadow:0 0 18px #df438788}
+#blueScene{background:#000;min-height:100svh;display:grid;place-items:center;padding:22px}
+.bluebox{width:min(100%,850px);background:#0900e8;border:2px solid #b7c8ff;padding:22px;color:#fff;font:12px/1.55 "Courier New",monospace;box-shadow:0 0 55px #2020ff77;white-space:pre-wrap}
+.bluebox strong{display:block;text-align:center;margin-bottom:16px;font-size:13px}
+.progress{height:8px;border:1px solid #fff;margin:18px 0 6px}
+.progress span{display:block;width:0;height:100%;background:#fff;transition:width 3.8s linear}
+#finalScene{background:radial-gradient(ellipse at center,#4b1c42,#170d20 65%,#090710);min-height:100svh;display:grid;place-items:center;padding:28px;text-align:center}
+.finalText{font-size:clamp(32px,8vw,52px);text-shadow:0 0 25px #ff8cc9}
+.finalNote{font:14px/1.7 system-ui,sans-serif;color:#e3cbd9;max-width:420px}
+.exit{position:fixed;right:14px;top:14px;z-index:10;border:1px solid #ffffff55;border-radius:30px;background:#100b15aa;color:#f8dce9;padding:9px 13px;font:11px system-ui,sans-serif;backdrop-filter:blur(8px)}
+#studio{width:min(100%,620px);margin:30px auto;padding:22px;border:1px solid #8b416b;border-radius:18px;background:#150e1dee;font:14px system-ui,sans-serif}
+#studio h2{margin-top:0}
+#studio label{display:block;margin:12px 0 5px;color:#e9bfd4;font-size:12px}
+#studio input{border-radius:10px;text-align:left;height:44px}
+#studio .primary{margin-top:16px}
+#studio a{color:#ffc2dc;overflow-wrap:anywhere}
+@media(max-width:430px){.scene{padding:38px 20px 28px;border-radius:22px}.subtitle{font-size:17px}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}}
 </style>
 </head>
 <body>
 
-<div id="app" class="shell">
-<header>
- <div class="logo">CYBER<span>PRANK</span> / CONTROL</div>
- <div class="status">● SIMULATION MODE</div>
-</header>
+<button class="exit hidden" id="exitBtn">Выйти из истории</button>
 
-<section class="hero">
- <small>SCENARIO COMMAND CENTER</small>
- <h1>Создавай истории.<br><span>Управляй эффектами.</span></h1>
- <p class="muted">Конструктор интерактивных кибер-сценариев.</p>
+<main id="app">
+<section class="scene" id="questionScene">
+<p class="kicker">ЛИЧНОЕ СООБЩЕНИЕ</p>
+<h1 id="questionTitle">Эта эмоция закрыта словом</h1>
+<p class="subtitle" id="questionText">Где мы познакомились?</p>
+<div class="field">
+<input id="answer" maxlength="80" autocomplete="off" placeholder="Введи слово..." aria-label="Ответ">
+</div>
+<button class="primary" id="answerBtn">Открыть</button>
+<p class="hint" id="answerHint">Введи ответ, чтобы продолжить историю</p>
+<p class="disclose">ИНТЕРАКТИВНАЯ ВЫМЫШЛЕННАЯ ИСТОРИЯ</p>
 </section>
 
-<div class="layout">
-<nav class="nav">
- <button class="active" data-tab="dashboard">◈ Обзор</button>
- <button data-tab="builder">＋ Генератор</button>
- <button data-tab="effects">✧ Эффекты</button>
- <button data-tab="links">↗ Мои ссылки</button>
- <button data-tab="settings">⚙ Настройки</button>
-</nav>
-
-<main>
-<section id="dashboard" class="tab">
- <div class="card">
-  <h2>Обзор панели</h2>
-  <div class="stats">
-   <div class="stat"><strong id="count">0</strong><small>Создано ссылок</small></div>
-   <div class="stat"><strong>4</strong><small>Цветовые темы</small></div>
-   <div class="stat"><strong>24/7</strong><small>Доступность сайта</small></div>
-  </div>
-  <p class="note">Сценарии создаются прямо в браузере. Это вымышленные визуальные истории, а не настоящий взлом.</p>
- </div>
- <div class="card">
-  <h2>Быстрый старт</h2>
-  <p class="muted">Настрой сценарий и получи ссылку для отправки.</p>
-  <button class="btn" onclick="tab('builder')">Создать сценарий</button>
- </div>
-</section>
-
-<section id="builder" class="tab hidden">
-<div class="card">
-<h2>Редактор сценария</h2>
-<div class="formgrid">
- <div class="field">
-  <label>Название</label>
-  <input id="title" maxlength="70" value="Секретное сообщение">
- </div>
- <div class="field">
-  <label>Имя отправителя</label>
-  <input id="sender" maxlength="40" value="НН">
- </div>
- <div class="field full">
-  <label>Вопрос на стартовом экране</label>
-  <input id="question" maxlength="180" value="Ты хочешь открыть секретное сообщение?">
- </div>
- <div class="field full">
-  <label>Входящее сообщение</label>
-  <textarea id="message" maxlength="700">У меня есть для тебя кое-что интересное...</textarea>
- </div>
- <div class="field full">
-  <label>Текст письма</label>
-  <textarea id="letter" maxlength="1000">Привет! Это интерактивная история. Никакого взлома не было.</textarea>
- </div>
- <div class="field">
-  <label>Финальная надпись</label>
-  <input id="ending" maxlength="160" value="Это была постановка!">
- </div>
- <div class="field">
-  <label>Цветовая тема</label>
-  <select id="theme">
-   <option value="pink">Neon Pink</option>
-   <option value="red">Cyber Red</option>
-   <option value="cyan">Black & Cyan</option>
-   <option value="purple">Purple Glitch</option>
-  </select>
- </div>
-</div>
-<div class="btnrow">
- <button class="btn" onclick="makeLink()">Создать ссылку</button>
- <button class="btn alt" onclick="preview()">Предпросмотр</button>
- <button class="btn alt" onclick="resetForm()">Сбросить</button>
-</div>
-<p class="note">Не выдавай вымышленную историю за настоящее системное предупреждение или сообщение реального человека.</p>
-<div id="newLink"></div>
-</div>
-
-<div class="card">
-<h2>Предпросмотр оформления</h2>
-<div class="preview">
- <div class="previewInner">
-  <div class="orb">⌁</div>
-  <div class="tag">INCOMING TRANSMISSION</div>
-  <h2 id="previewTitle">Секретное сообщение</h2>
-  <p id="previewQuestion">Ты хочешь открыть секретное сообщение?</p>
-  <button class="btn" onclick="preview()">Открыть демо</button>
- </div>
-</div>
-</div>
-</section>
-
-<section id="effects" class="tab hidden">
-<div class="card">
-<h2>Библиотека эффектов</h2>
-<div class="stats">
- <div class="stat"><strong>GLITCH</strong><small>Цифровые помехи</small></div>
- <div class="stat"><strong>SCAN</strong><small>Линии сканера</small></div>
- <div class="stat"><strong>NEON</strong><small>Свечение</small></div>
- <div class="stat"><strong>TYPE</strong><small>Псевдотерминал</small></div>
- <div class="stat"><strong>LETTER</strong><small>Появление письма</small></div>
- <div class="stat"><strong>THEMES</strong><small>4 темы</small></div>
-</div>
-<p class="note">Страница не сканирует телефон и не получает доступ к его файлам, камере или контактам.</p>
-</div>
-</section>
-
-<section id="links" class="tab hidden">
-<div class="card">
-<h2>Мои ссылки</h2>
-<div id="linkList" class="list"></div>
-<button class="btn danger" onclick="clearLinks()">Очистить список</button>
-</div>
-</section>
-
-<section id="settings" class="tab hidden">
-<div class="card">
-<h2>Настройки</h2>
-<label><input id="reduced" type="checkbox" style="width:auto"> Уменьшить анимации</label>
-<p class="note">История хранится локально в браузере. Очистка списка не отключает ранее созданные ссылки.</p>
-</div>
+<section class="scene hidden" id="letterScene">
+<p class="smallcap">СООБЩЕНИЕ ПОЛУЧЕНО</p>
+<h1 style="font-style:italic;font-size:30px">Для тебя письмо</h1>
+<button class="envelope" id="envelopeBtn" aria-label="Открыть декоративный конверт"></button>
+<p class="subtitle" style="font-size:15px">Нажми на конверт, чтобы продолжить</p>
+<p class="disclose">ЭТО ВИЗУАЛЬНАЯ СЦЕНА — УСТРОЙСТВО НЕ ПРОВЕРЯЕТСЯ</p>
 </section>
 </main>
-</div>
-<div class="footer">CYBER PRANK CONTROL 2.0 • FICTIONAL EXPERIENCE</div>
-</div>
 
-<section id="experience" class="screen hidden">
-<div class="card preview">
-<div class="previewInner">
- <div class="orb">⌁</div>
- <div class="tag">UNKNOWN TRANSMISSION • FICTIONAL</div>
- <h1 id="xTitle"></h1>
- <p id="xQuestion"></p>
- <button id="openStory" class="btn" onclick="runStory()">ОТКРЫТЬ СООБЩЕНИЕ</button>
- <div id="terminal" class="terminal hidden"></div>
- <div id="incoming" class="incoming hidden">
-  <div class="from">НОВОЕ СООБЩЕНИЕ • <span id="xSender"></span></div>
-  <p id="xMessage"></p>
- </div>
- <div id="letter" class="letter hidden">
-  <small>ЛИЧНОЕ ПИСЬМО</small>
-  <p id="xLetter"></p>
- </div>
- <h2 id="xEnding" class="hidden"></h2>
- <p class="muted">Это постановочная история. Никакого доступа к устройству не выполняется.</p>
- <button class="btn alt" onclick="closeStory()">× Закрыть</button>
+<section id="blueScene" class="hidden">
+<div class="bluebox">
+<strong>ВИЗУАЛЬНЫЙ ТЕРМИНАЛ / СИМУЛЯЦИЯ</strong>
+<div id="blueLines"></div>
+<div class="progress"><span id="bar"></span></div>
+<div id="blueStatus">Подготовка следующей сцены...</div>
 </div>
+</section>
+
+<section id="finalScene" class="hidden">
+<div>
+<p class="smallcap">СООБЩЕНИЕ ДОСТАВЛЕНО</p>
+<h1 class="finalText" id="finalTitle">ВАС ЗАМЕТИЛИ</h1>
+<p class="finalNote" id="finalMessage">Это была постановочная история. Никакого доступа к устройству или личным данным не происходило.</p>
+<button class="primary" id="restartBtn">Посмотреть ещё раз</button>
+<p class="disclose">FICTIONAL EXPERIENCE</p>
 </div>
+</section>
+
+<section id="studio" class="hidden">
+<h2>Cyber Prank Control · редактор истории</h2>
+<label>Заголовок вопроса</label>
+<input id="sTitle" value="Эта эмоция закрыта словом">
+<label>Вопрос</label>
+<input id="sQuestion" value="Где мы познакомились?">
+<label>Подсказка</label>
+<input id="sHint" value="Введи ответ, чтобы продолжить историю">
+<label>Правильный ответ (необязательно)</label>
+<input id="sAnswer" placeholder="Оставь пустым, чтобы принять любое слово">
+<label>Финальная надпись</label>
+<input id="sFinal" value="ВАС ЗАМЕТИЛИ">
+<label>Текст раскрытия</label>
+<input id="sMessage" value="Это была постановочная история. Никакого доступа к устройству или личным данным не происходило.">
+<button class="primary" id="createLink">Создать ссылку сценария</button>
+<p id="linkOut"></p>
+<p class="disclose">Редактор владельца: добавь к адресу ?studio=1. Сценарий остаётся вымышленным.</p>
 </section>
 
 <script>
-'use strict';
+(()=>{
 const $=id=>document.getElementById(id);
-const KEY='cpc_links_v2';
-const colors={pink:'#ff438f',red:'#ff4545',cyan:'#63eaff',purple:'#b77bff'};
-let timers=[];
+const defaults={
+ title:'Эта эмоция закрыта словом',
+ question:'Где мы познакомились?',
+ hint:'Введи ответ, чтобы продолжить историю',
+ answer:'',
+ final:'ВАС ЗАМЕТИЛИ',
+ message:'Это была постановочная история. Никакого доступа к устройству или личным данным не происходило.'
+};
+let data={...defaults},stage=0;
 
-function getList(){
- try{return JSON.parse(localStorage.getItem(KEY)||'[]')}
- catch{return []}
-}
-function tab(id){
- document.querySelectorAll('.tab').forEach(x=>x.classList.add('hidden'));
- $(id).classList.remove('hidden');
- document.querySelectorAll('.nav button').forEach(x=>x.classList.toggle('active',x.dataset.tab===id));
- if(id==='links')renderLinks();
- updateCount();
-}
-document.querySelectorAll('.nav button').forEach(b=>b.onclick=()=>tab(b.dataset.tab));
+const enc=o=>btoa(unescape(encodeURIComponent(JSON.stringify(o))))
+ .replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
 
-function formData(){
- return {
-  title:$('title').value.trim()||'Секретное сообщение',
-  sender:$('sender').value.trim()||'НН',
-  question:$('question').value.trim(),
-  message:$('message').value.trim(),
-  letter:$('letter').value.trim(),
-  ending:$('ending').value.trim(),
-  theme:$('theme').value
- };
-}
-function encode(data){
- return btoa(unescape(encodeURIComponent(JSON.stringify(data))))
-  .replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
-}
-function decode(value){
- value=value.replace(/-/g,'+').replace(/_/g,'/');
- while(value.length%4)value+='=';
- return JSON.parse(decodeURIComponent(escape(atob(value))));
-}
-function makeLink(){
- const data=formData();
- const url=location.href.split('#')[0]+'#story='+encode(data);
- const list=getList();
- list.unshift({title:data.title,url});
- localStorage.setItem(KEY,JSON.stringify(list.slice(0,100)));
- const box=$('newLink');
- box.replaceChildren();
- const a=document.createElement('a');
- a.href=url;a.textContent=url;
- a.style.cssText='display:block;overflow-wrap:anywhere;color:var(--cyan);margin:15px 0';
- const b=document.createElement('button');
- b.className='btn cyan';b.textContent='Копировать ссылку';
- b.onclick=()=>copy(url,b);
- box.append(a,b);
- updateCount();
-}
-async function copy(value,button){
- try{
-  await navigator.clipboard.writeText(value);
-  button.textContent='Скопировано!';
- }catch{
-  prompt('Скопируй ссылку:',value);
- }
-}
-function preview(){startStory(formData())}
-function resetForm(){
- $('title').value='Секретное сообщение';
- $('sender').value='НН';
- $('question').value='Ты хочешь открыть секретное сообщение?';
- $('message').value='У меня есть для тебя кое-что интересное...';
- $('letter').value='Привет! Это интерактивная история. Никакого взлома не было.';
- $('ending').value='Это была постановка!';
- $('theme').value='pink';
- updatePreview();
-}
-function updatePreview(){
- $('previewTitle').textContent=$('title').value;
- $('previewQuestion').textContent=$('question').value;
-}
-['title','question'].forEach(id=>$(id).addEventListener('input',updatePreview));
+const dec=s=>{
+ s=s.replace(/-/g,'+').replace(/_/g,'/');
+ while(s.length%4)s+='=';
+ return JSON.parse(decodeURIComponent(escape(atob(s))));
+};
 
-function renderLinks(){
- const box=$('linkList');
- box.replaceChildren();
- const list=getList();
- if(!list.length){
-  box.textContent='Пока нет созданных ссылок.';
+function show(id){
+ ['app','blueScene','finalScene','studio'].forEach(x=>
+  $(x).classList.toggle('hidden',x!==id)
+ );
+ $('exitBtn').classList.toggle('hidden',id==='studio');
+}
+
+function begin(d){
+ data={...defaults,...d};
+ $('questionTitle').textContent=data.title;
+ $('questionText').textContent=data.question;
+ $('answerHint').textContent=data.hint;
+ $('finalTitle').textContent=data.final;
+ $('finalMessage').textContent=data.message;
+ show('app');
+ $('questionScene').classList.remove('hidden');
+ $('letterScene').classList.add('hidden');
+ $('answer').value='';
+ $('exitBtn').classList.remove('hidden');
+ stage=1;
+}
+
+function exit(){
+ if(!stage)return;
+ stage=0;
+ location.hash='';
+ history.replaceState(null,'',location.pathname+location.search);
+ show('studio');
+}
+
+$('answerBtn').onclick=()=>{
+ const v=$('answer').value.trim();
+ if(!v){
+  $('answerHint').textContent='Сначала введи слово';
   return;
  }
- list.forEach(item=>{
-  const row=document.createElement('div');row.className='item';
-  const a=document.createElement('a');a.href=item.url;a.textContent=item.title;
-  const b=document.createElement('button');b.className='btn alt';b.textContent='Копировать';
-  b.onclick=()=>copy(item.url,b);
-  row.append(a,b);box.append(row);
- });
-}
-function clearLinks(){
- if(confirm('Очистить список на этом устройстве?')){
-  localStorage.removeItem(KEY);renderLinks();updateCount();
+ if(data.answer&&v.toLocaleLowerCase('ru')!==data.answer.toLocaleLowerCase('ru')){
+  $('answerHint').textContent='Попробуй ещё раз';
+  $('answer').value='';
+  return;
  }
-}
-function updateCount(){$('count').textContent=getList().length}
+ $('questionScene').classList.add('hidden');
+ $('letterScene').classList.remove('hidden');
+ stage=2;
+};
 
-function startStory(data){
- document.documentElement.style.setProperty('--accent',colors[data.theme]||colors.pink);
- $('app').classList.add('hidden');
- $('experience').classList.remove('hidden');
- $('xTitle').textContent=data.title;
- $('xQuestion').textContent=data.question;
- $('xSender').textContent=data.sender;
- $('xMessage').textContent=data.message;
- $('xLetter').textContent=data.letter;
- $('xEnding').textContent=data.ending;
- document.title=data.title+' — Cyber Experience';
-}
-function runStory(){
- timers.forEach(t=>{clearTimeout(t);clearInterval(t)});
- timers=[];
- $('openStory').classList.add('hidden');
- $('terminal').classList.remove('hidden');
- $('terminal').textContent='';
- const lines=[
-  '> Запуск визуальной истории...',
-  '> Загрузка декоративных эффектов...',
-  '> Подготовка входящего сообщения...',
-  '> Канал анимации готов.',
-  '> Это симуляция. Устройство не сканируется.'
- ];
- let i=0;
- const interval=setInterval(()=>{
-  $('terminal').textContent+=lines[i]+'\n';
-  $('terminal').classList.add('glitch');
-  timers.push(setTimeout(()=>$('terminal').classList.remove('glitch'),350));
-  i++;
-  if(i===lines.length){
-   clearInterval(interval);
-   timers.push(setTimeout(()=>$('incoming').classList.remove('hidden'),600));
-   timers.push(setTimeout(()=>$('letter').classList.remove('hidden'),1700));
-   timers.push(setTimeout(()=>$('xEnding').classList.remove('hidden'),2800));
-  }
- },620);
- timers.push(interval);
-}
-function closeStory(){
- timers.forEach(t=>{clearTimeout(t);clearInterval(t)});
- timers=[];
- location.hash='';
- $('experience').classList.add('hidden');
- $('app').classList.remove('hidden');
- ['terminal','incoming','letter','xEnding'].forEach(id=>$(id).classList.add('hidden'));
- $('openStory').classList.remove('hidden');
- document.title='Cyber Prank Control 2.0';
-}
-function route(){
- if(location.hash.startsWith('#story=')){
-  try{startStory(decode(location.hash.slice(7)))}
-  catch{$('app').classList.remove('hidden');alert('Ссылка повреждена.')}
- }
-}
-$('reduced').addEventListener('change',e=>{
- document.body.classList.toggle('less-motion',e.target.checked);
+$('answer').addEventListener('keydown',e=>{
+ if(e.key==='Enter')$('answerBtn').click();
 });
-updateCount();
-route();
+
+$('envelopeBtn').onclick=()=>{
+ show('blueScene');
+ stage=3;
+ $('blueLines').textContent='';
+ $('bar').style.width='0';
+
+ const lines=[
+  '> Запуск визуальной последовательности...',
+  '> Проверка ответа: завершено.',
+  '> Подготовка декоративного терминала...',
+  '> Соединение с вымышленным каналом: готово.',
+  '> Личные данные не запрашиваются.',
+  '> Сцена почти завершена.'
+ ];
+
+ let i=0;
+ const tick=()=>{
+  if(i<lines.length){
+   $('blueLines').textContent+=lines[i++]+'\n';
+   setTimeout(tick,460);
+  }else{
+   $('bar').style.width='100%';
+   $('blueStatus').textContent='Симуляция завершена.';
+   setTimeout(()=>{
+    show('finalScene');
+    stage=4;
+   },1300);
+  }
+ };
+ setTimeout(tick,350);
+};
+
+$('restartBtn').onclick=()=>begin(data);
+$('exitBtn').onclick=exit;
+
+document.addEventListener('keydown',e=>{
+ if(e.key==='Escape')exit();
+});
+
+window.addEventListener('popstate',()=>{
+ if(stage)exit();
+});
+
+$('createLink').onclick=()=>{
+ const d={
+  title:$('sTitle').value||defaults.title,
+  question:$('sQuestion').value||defaults.question,
+  hint:$('sHint').value||defaults.hint,
+  answer:$('sAnswer').value.trim(),
+  final:$('sFinal').value||defaults.final,
+  message:$('sMessage').value||defaults.message
+ };
+
+ const url=location.href.split('#')[0].split('?')[0]+'#story='+enc(d);
+ $('linkOut').replaceChildren();
+
+ const a=document.createElement('a');
+ a.href=url;
+ a.textContent=url;
+ $('linkOut').append(a);
+
+ if(navigator.clipboard?.writeText){
+  navigator.clipboard.writeText(url).catch(()=>{});
+ }
+};
+
+if(location.hash.startsWith('#story=')){
+ try{
+  begin(dec(location.hash.slice(7)));
+ }catch{
+  show('studio');
+ }
+}else if(new URLSearchParams(location.search).has('studio')){
+ show('studio');
+}else{
+ show('studio');
+}
+})();
 </script>
 </body>
 </html>

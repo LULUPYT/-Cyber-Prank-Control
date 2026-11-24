@@ -1,270 +1,665 @@
 
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ru">
 <head>
-<meta charset="utf-8">
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#170d1b">
-<title>Личное сообщение</title>
+<meta name="theme-color" content="#080008">
+<title>Тебе сообщение</title>
+
 <style>
-:root{--pink:#ff72b7;--pink2:#e83e91}
 *{box-sizing:border-box}
-html,body{margin:0;min-height:100%;background:#090710;color:#fff;font-family:Georgia,"Times New Roman",serif}
-body{min-height:100svh;background:radial-gradient(ellipse at 50% 18%,#54203f 0,#251126 42%,#090710 100%);overflow-x:hidden}
+html,body{margin:0;min-height:100%;background:#000;color:white}
+body{overflow-x:hidden}
+.hidden{display:none!important}
 button,input{font:inherit}
 button{cursor:pointer}
-.hidden{display:none!important}
-#app{min-height:100svh;display:grid;place-items:center;padding:12px}
-.scene{width:min(100%,520px);min-height:calc(100svh - 24px);position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:42px 25px 34px;border:1px solid #a64f7c55;border-radius:25px;background:linear-gradient(155deg,#35162fdd,#170e1ddd 60%,#100b16f2);box-shadow:0 0 80px #d83b8540,inset 0 0 55px #f49bc00b;overflow:hidden}
-.scene:before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent 0 3px,#fff05 4px);opacity:.25;pointer-events:none}
-.scene>*{position:relative;z-index:1}
-.kicker,.smallcap{font:11px/1.6 system-ui,sans-serif;letter-spacing:4px;text-transform:uppercase;color:#ffb7d8;margin:0 0 28px}
-h1{font-size:clamp(30px,8vw,43px);font-weight:400;line-height:1.12;margin:0 0 18px;text-shadow:0 0 24px #ff9bcf66}
-.subtitle{font-size:18px;line-height:1.5;color:#f1dce8;margin:0 0 28px}
-.field{width:100%;max-width:360px;margin:0 auto 15px}
-input{width:100%;height:54px;border:1px solid #ffacd0aa;border-radius:999px;background:#2a1429;color:white;text-align:center;padding:0 18px;outline:none;box-shadow:inset 0 0 18px #ff6bad16}
-input:focus{border-color:#ffd1e5;box-shadow:0 0 25px #ff75b866}
-input::placeholder{color:#d9a9c2}
-.primary{border:0;border-radius:999px;min-height:52px;padding:0 28px;color:#4b1433;font:700 15px system-ui,sans-serif;letter-spacing:.5px;background:linear-gradient(100deg,#ffc2dc,#ff6eae 65%,#f94f9d);box-shadow:0 0 28px #ff64ad99,0 8px 30px #e63d8650;min-width:210px}
-.primary:active{transform:scale(.98)}
-.hint{font:11px/1.5 system-ui,sans-serif;color:#c7a9bc;margin-top:25px}
-.disclose{font:10px system-ui,sans-serif;letter-spacing:1px;color:#c8a6bb;margin-top:22px}
-.envelope{width:min(78vw,280px);height:174px;margin:35px auto 20px;position:relative;border:0;background:linear-gradient(145deg,#ffe7df,#ffc7d5);border-radius:12px;box-shadow:0 0 60px #ffb6d9aa;overflow:hidden}
-.envelope:before{content:"";position:absolute;inset:0;background:linear-gradient(145deg,transparent 49%,#e99bb9 50%),linear-gradient(215deg,transparent 49%,#f5b4c9 50%);clip-path:polygon(0 0,100% 0,50% 65%)}
-.envelope:after{content:"";position:absolute;width:48px;height:48px;left:calc(50% - 24px);top:calc(50% - 24px);border-radius:50%;background:#df4387;box-shadow:0 0 18px #df438788}
-#blueScene{background:#000;min-height:100svh;display:grid;place-items:center;padding:22px}
-.bluebox{width:min(100%,850px);background:#0900e8;border:2px solid #b7c8ff;padding:22px;color:#fff;font:12px/1.55 "Courier New",monospace;box-shadow:0 0 55px #2020ff77;white-space:pre-wrap}
-.bluebox strong{display:block;text-align:center;margin-bottom:16px;font-size:13px}
-.progress{height:8px;border:1px solid #fff;margin:18px 0 6px}
-.progress span{display:block;width:0;height:100%;background:#fff;transition:width 3.8s linear}
-#finalScene{background:radial-gradient(ellipse at center,#4b1c42,#170d20 65%,#090710);min-height:100svh;display:grid;place-items:center;padding:28px;text-align:center}
-.finalText{font-size:clamp(32px,8vw,52px);text-shadow:0 0 25px #ff8cc9}
-.finalNote{font:14px/1.7 system-ui,sans-serif;color:#e3cbd9;max-width:420px}
-.exit{position:fixed;right:14px;top:14px;z-index:10;border:1px solid #ffffff55;border-radius:30px;background:#100b15aa;color:#f8dce9;padding:9px 13px;font:11px system-ui,sans-serif;backdrop-filter:blur(8px)}
-#studio{width:min(100%,620px);margin:30px auto;padding:22px;border:1px solid #8b416b;border-radius:18px;background:#150e1dee;font:14px system-ui,sans-serif}
-#studio h2{margin-top:0}
-#studio label{display:block;margin:12px 0 5px;color:#e9bfd4;font-size:12px}
-#studio input{border-radius:10px;text-align:left;height:44px}
-#studio .primary{margin-top:16px}
-#studio a{color:#ffc2dc;overflow-wrap:anywhere}
-@media(max-width:430px){.scene{padding:38px 20px 28px;border-radius:22px}.subtitle{font-size:17px}}
-@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}}
+
+/* QUESTION */
+.scene{
+ min-height:100svh;
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ flex-direction:column;
+ position:relative;
+ overflow:hidden;
+ text-align:center;
+ padding:25px;
+}
+#question{
+ background:radial-gradient(ellipse at center,#71384f,#3b1a2c 55%,#120912);
+}
+#question:after{
+ content:"";
+ position:absolute;
+ inset:0;
+ pointer-events:none;
+ background:repeating-linear-gradient(
+  0deg,transparent 0 3px,#ffffff08 4px
+ );
+}
+.question-content{
+ position:relative;
+ z-index:1;
+ width:min(100%,390px);
+}
+.question-title{
+ font:normal clamp(26px,7vw,36px)/1.3 Georgia,serif;
+ text-shadow:0 0 20px #ffb5d3;
+}
+.question-sub{
+ color:#f5c5d7;
+ font:italic 17px Georgia,serif;
+ margin:25px 0;
+}
+#answer{
+ width:100%;
+ height:48px;
+ border:1px solid #f4a9c6;
+ border-radius:30px;
+ background:#6b3a5066;
+ color:white;
+ text-align:center;
+ outline:none;
+ padding:10px;
+}
+#answer::placeholder{color:#f2c2d3}
+.pink-button{
+ width:100%;
+ height:48px;
+ margin-top:12px;
+ border:0;
+ border-radius:30px;
+ background:linear-gradient(90deg,#ffc6d9,#ff9cbd);
+ color:#57243b;
+ letter-spacing:1px;
+ box-shadow:0 0 25px #ffb1ce88;
+}
+.hint{
+ color:#e9bfd0;
+ font:11px system-ui,sans-serif;
+ margin-top:22px;
+}
+
+/* LETTER */
+#letter{
+ background:radial-gradient(ellipse at center,#542536,#29121e 60%,#100a11);
+}
+.letter-name{
+ font:italic 20px Georgia,serif;
+ color:#ffc2d8;
+}
+.letter-title{
+ font:32px Georgia,serif;
+ text-shadow:0 0 25px #ffabc9;
+ margin-top:12px;
+}
+.envelope{
+ width:min(72vw,270px);
+ height:165px;
+ margin:35px 0 20px;
+ border:0;
+ border-radius:5px;
+ background:linear-gradient(145deg,#ffe3e8,#f3a8bd);
+ box-shadow:0 0 45px #ff9fbe88;
+ position:relative;
+ overflow:hidden;
+}
+.envelope:before{
+ content:"";
+ position:absolute;
+ inset:0;
+ background:#e98eaa;
+ clip-path:polygon(0 0,50% 60%,100% 0);
+}
+.envelope:after{
+ content:"";
+ position:absolute;
+ inset:0;
+ background:
+ linear-gradient(35deg,transparent 49%,#ffd5df 50%) left/50% 100% no-repeat,
+ linear-gradient(-35deg,transparent 49%,#f8bfd0 50%) right/50% 100% no-repeat;
+}
+.envelope span{
+ position:absolute;
+ z-index:2;
+ left:calc(50% - 18px);
+ top:58px;
+ font-size:34px;
+ color:#9e3558;
+}
+
+/* BLACK CODE SCENE */
+#black{
+ background:#000;
+ color:#eee;
+ font-family:"Courier New",monospace;
+}
+#rain{
+ position:absolute;
+ inset:0;
+ overflow:hidden;
+ color:#e9e9e9;
+ font:11px/1.5 monospace;
+ white-space:pre-wrap;
+ overflow-wrap:anywhere;
+ opacity:.9;
+ animation:flicker .13s infinite alternate;
+}
+@keyframes flicker{
+ from{opacity:.65}
+ to{opacity:1}
+}
+#error-stream{
+ position:absolute;
+ top:5%;
+ left:0;
+ width:100%;
+ color:#eee;
+ font:10px/1.4 monospace;
+ white-space:pre-wrap;
+ overflow-wrap:anywhere;
+ text-shadow:0 0 5px white;
+}
+.watched{
+ position:relative;
+ z-index:2;
+ margin:auto;
+ font:18px Georgia,serif;
+ letter-spacing:1px;
+ text-shadow:0 0 15px white;
+}
+.eye{
+ display:block;
+ font-size:50px;
+}
+
+/* BLUE DOS SCENE */
+#blue{
+ background:#000;
+ padding:0;
+}
+.blue-band{
+ width:100%;
+ min-height:48svh;
+ background:#071cff;
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ padding:20px 12px;
+ font:10px/1.4 "Courier New",monospace;
+}
+.dos-window{
+ width:min(100%,590px);
+ border:1px solid white;
+ padding:10px;
+ box-shadow:0 0 0 1px #899aff;
+}
+.dos-head{
+ text-align:center;
+ text-decoration:underline;
+ margin-bottom:10px;
+}
+.dos-copy{
+ font-size:9px;
+ text-align:left;
+ line-height:1.4;
+}
+.dos-label{
+ text-align:center;
+ margin:12px 0 4px;
+}
+.dos-input{
+ height:17px;
+ border:1px solid white;
+ display:flex;
+ align-items:center;
+ padding-left:4px;
+}
+.cursor{
+ display:inline-block;
+ width:7px;
+ height:11px;
+ background:white;
+ animation:blink .6s steps(2) infinite;
+}
+@keyframes blink{50%{opacity:0}}
+.dos-foot{
+ display:flex;
+ justify-content:space-between;
+ font-size:8px;
+ margin-top:7px;
+}
+
+/* FINAL */
+#finish{
+ background:#000;
+ font-family:"Courier New",monospace;
+}
+#finish-errors{
+ position:absolute;
+ top:15%;
+ left:7px;
+ width:48%;
+ text-align:left;
+ color:#ddd;
+ font-size:10px;
+ line-height:1.4;
+ white-space:pre-wrap;
+}
+.final-content{
+ position:relative;
+ z-index:2;
+}
+.final-eye{
+ font-size:48px;
+ display:block;
+}
+.final-title{
+ font:20px Georgia,serif;
+ letter-spacing:1px;
+}
+.final-message{
+ max-width:340px;
+ margin:24px auto;
+ color:#ccc;
+ font:12px/1.6 system-ui,sans-serif;
+}
+.restart{
+ background:transparent;
+ color:#ddd;
+ border:1px solid #777;
+ padding:11px 20px;
+ font:12px monospace;
+}
+
+/* EDITOR */
+#studio{
+ max-width:620px;
+ margin:25px auto;
+ padding:22px;
+ color:white;
+ background:#151018;
+ border:1px solid #7d3b54;
+ border-radius:14px;
+ font:14px system-ui,sans-serif;
+}
+#studio label{
+ display:block;
+ margin:13px 0 5px;
+ color:#f2bdcf;
+ font-size:12px;
+}
+#studio input{
+ width:100%;
+ padding:11px;
+ border:1px solid #78445a;
+ border-radius:7px;
+ background:#09070c;
+ color:white;
+}
+#studio button{
+ margin-top:16px;
+ padding:12px 18px;
+ background:#f3a9c4;
+ border:0;
+ border-radius:20px;
+ color:#321321;
+}
+#linkout{
+ overflow-wrap:anywhere;
+ color:#ffc5dc;
+ margin-top:15px;
+}
+.exit{
+ position:fixed;
+ z-index:20;
+ right:10px;
+ top:10px;
+ border:1px solid #7778;
+ background:#0009;
+ color:#ddd;
+ border-radius:20px;
+ padding:7px 10px;
+ font:10px system-ui,sans-serif;
+}
 </style>
 </head>
+
 <body>
 
-<button class="exit hidden" id="exitBtn">Выйти из истории</button>
+<button id="exit" class="exit hidden">Выйти</button>
 
-<main id="app">
-<section class="scene" id="questionScene">
-<p class="kicker">ЛИЧНОЕ СООБЩЕНИЕ</p>
-<h1 id="questionTitle">Эта эмоция закрыта словом</h1>
-<p class="subtitle" id="questionText">Где мы познакомились?</p>
-<div class="field">
-<input id="answer" maxlength="80" autocomplete="off" placeholder="Введи слово..." aria-label="Ответ">
-</div>
-<button class="primary" id="answerBtn">Открыть</button>
-<p class="hint" id="answerHint">Введи ответ, чтобы продолжить историю</p>
-<p class="disclose">ИНТЕРАКТИВНАЯ ВЫМЫШЛЕННАЯ ИСТОРИЯ</p>
+<main>
+
+<!-- ВОПРОС -->
+<section id="question" class="scene">
+ <div class="question-content">
+  <h1 class="question-title" id="qtitle">
+   Эта эмоция закрыта словом
+  </h1>
+
+  <p class="question-sub" id="qtext">
+   Где мы познакомились?
+  </p>
+
+  <input id="answer" placeholder="слово" maxlength="80">
+
+  <button class="pink-button" id="open">
+   Открыть
+  </button>
+
+  <p class="hint" id="hint">
+   Введи ответ, чтобы продолжить
+  </p>
+ </div>
 </section>
 
-<section class="scene hidden" id="letterScene">
-<p class="smallcap">СООБЩЕНИЕ ПОЛУЧЕНО</p>
-<h1 style="font-style:italic;font-size:30px">Для тебя письмо</h1>
-<button class="envelope" id="envelopeBtn" aria-label="Открыть декоративный конверт"></button>
-<p class="subtitle" style="font-size:15px">Нажми на конверт, чтобы продолжить</p>
-<p class="disclose">ЭТО ВИЗУАЛЬНАЯ СЦЕНА — УСТРОЙСТВО НЕ ПРОВЕРЯЕТСЯ</p>
+<!-- ПИСЬМО -->
+<section id="letter" class="scene hidden">
+ <div class="letter-name" id="letterName">Для тебя</div>
+ <div class="letter-title">тебе письмо</div>
+
+ <button class="envelope" id="envelope">
+  <span>✉</span>
+ </button>
+
+ <div class="hint">НАЖМИ, ЧТОБЫ ПРОДОЛЖИТЬ</div>
 </section>
+
+<!-- ЧЁРНЫЙ ЭКРАН С КОДАМИ -->
+<section id="black" class="scene hidden">
+ <div id="rain"></div>
+ <div id="error-stream"></div>
+
+ <div class="watched">
+  <span class="eye">◉</span>
+  <span id="watchedText">ВАС ЗАМЕТИЛИ</span>
+ </div>
+</section>
+
+<!-- СИНИЙ DOS -->
+<section id="blue" class="scene hidden">
+ <div class="blue-band">
+  <div class="dos-window">
+   <div class="dos-head">
+    UNKNOWN SYSTEM / MESSAGE
+   </div>
+
+   <div class="dos-copy" id="doscopy">
+    INITIALIZING...
+    <br><br>
+    0x7F 0xA9 0xFF NULL
+    <br>
+    01001000 01000101 01001100 01001100 01001111
+    <br><br>
+    UNKNOWN PROCESS DETECTED
+    <br>
+    STORY SEQUENCE: ACTIVE
+    <br>
+    NO DEVICE ACCESS
+   </div>
+
+   <div class="dos-label">
+    ВВЕДИТЕ КОД РАЗБЛОКИРОВКИ:
+   </div>
+
+   <div class="dos-input">
+    <span class="cursor"></span>
+   </div>
+
+   <div class="dos-foot">
+    <span>STORY_MODE: ACTIVE</span>
+    <span>ENTER [ДАЛЕЕ]</span>
+   </div>
+  </div>
+ </div>
+</section>
+
+<!-- ФИНАЛ -->
+<section id="finish" class="scene hidden">
+ <div id="finish-errors"></div>
+
+ <div class="final-content">
+  <span class="final-eye">◉</span>
+
+  <div class="final-title" id="finalTitle">
+   ВАС ЗАМЕТИЛИ
+  </div>
+
+  <p class="final-message" id="finalMessage">
+   Это была вымышленная интерактивная история.
+   Никакого доступа к устройству или личным данным не происходило.
+  </p>
+
+  <button class="restart" id="restart">
+   ПРОЙТИ ЕЩЁ РАЗ
+  </button>
+ </div>
+</section>
+
 </main>
 
-<section id="blueScene" class="hidden">
-<div class="bluebox">
-<strong>ВИЗУАЛЬНЫЙ ТЕРМИНАЛ / СИМУЛЯЦИЯ</strong>
-<div id="blueLines"></div>
-<div class="progress"><span id="bar"></span></div>
-<div id="blueStatus">Подготовка следующей сцены...</div>
-</div>
-</section>
-
-<section id="finalScene" class="hidden">
-<div>
-<p class="smallcap">СООБЩЕНИЕ ДОСТАВЛЕНО</p>
-<h1 class="finalText" id="finalTitle">ВАС ЗАМЕТИЛИ</h1>
-<p class="finalNote" id="finalMessage">Это была постановочная история. Никакого доступа к устройству или личным данным не происходило.</p>
-<button class="primary" id="restartBtn">Посмотреть ещё раз</button>
-<p class="disclose">FICTIONAL EXPERIENCE</p>
-</div>
-</section>
-
+<!-- РЕДАКТОР -->
 <section id="studio" class="hidden">
-<h2>Cyber Prank Control · редактор истории</h2>
-<label>Заголовок вопроса</label>
-<input id="sTitle" value="Эта эмоция закрыта словом">
-<label>Вопрос</label>
-<input id="sQuestion" value="Где мы познакомились?">
-<label>Подсказка</label>
-<input id="sHint" value="Введи ответ, чтобы продолжить историю">
-<label>Правильный ответ (необязательно)</label>
-<input id="sAnswer" placeholder="Оставь пустым, чтобы принять любое слово">
-<label>Финальная надпись</label>
-<input id="sFinal" value="ВАС ЗАМЕТИЛИ">
-<label>Текст раскрытия</label>
-<input id="sMessage" value="Это была постановочная история. Никакого доступа к устройству или личным данным не происходило.">
-<button class="primary" id="createLink">Создать ссылку сценария</button>
-<p id="linkOut"></p>
-<p class="disclose">Редактор владельца: добавь к адресу ?studio=1. Сценарий остаётся вымышленным.</p>
+ <h2>Cyber Prank Control</h2>
+
+ <label>Заголовок вопроса</label>
+ <input id="sTitle" value="Эта эмоция закрыта словом">
+
+ <label>Вопрос</label>
+ <input id="sQuestion" value="Где мы познакомились?">
+
+ <label>Имя над письмом</label>
+ <input id="sName" value="Для тебя">
+
+ <label>Подсказка</label>
+ <input id="sHint" value="Введи ответ, чтобы продолжить">
+
+ <label>Правильный ответ (необязательно)</label>
+ <input id="sAnswer" placeholder="Ответ">
+
+ <label>Надпись в финале</label>
+ <input id="sFinal" value="ВАС ЗАМЕТИЛИ">
+
+ <label>Финальный текст</label>
+ <input id="sMessage" value="Это была вымышленная интерактивная история. Никакого доступа к устройству или личным данным не происходило.">
+
+ <button id="make">Создать ссылку</button>
+
+ <div id="linkout"></div>
 </section>
 
 <script>
 (()=>{
 const $=id=>document.getElementById(id);
+
 const defaults={
- title:'Эта эмоция закрыта словом',
- question:'Где мы познакомились?',
- hint:'Введи ответ, чтобы продолжить историю',
- answer:'',
- final:'ВАС ЗАМЕТИЛИ',
- message:'Это была постановочная история. Никакого доступа к устройству или личным данным не происходило.'
+ title:"Эта эмоция закрыта словом",
+ question:"Где мы познакомились?",
+ name:"Для тебя",
+ hint:"Введи ответ, чтобы продолжить",
+ answer:"",
+ final:"ВАС ЗАМЕТИЛИ",
+ message:"Это была вымышленная интерактивная история. Никакого доступа к устройству или личным данным не происходило."
 };
-let data={...defaults},stage=0;
 
-const enc=o=>btoa(unescape(encodeURIComponent(JSON.stringify(o))))
- .replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
+let data={...defaults};
+let timers=[];
+let stage=0;
 
-const dec=s=>{
- s=s.replace(/-/g,'+').replace(/_/g,'/');
- while(s.length%4)s+='=';
- return JSON.parse(decodeURIComponent(escape(atob(s))));
-};
+function clearTimers(){
+ timers.forEach(clearTimeout);
+ timers=[];
+}
+
+function later(fn,ms){
+ timers.push(setTimeout(fn,ms));
+}
 
 function show(id){
- ['app','blueScene','finalScene','studio'].forEach(x=>
-  $(x).classList.toggle('hidden',x!==id)
- );
- $('exitBtn').classList.toggle('hidden',id==='studio');
+ ["question","letter","black","blue","finish","studio"]
+ .forEach(x=>$(x).classList.toggle("hidden",x!==id));
 }
 
-function begin(d){
+function encode(obj){
+ return btoa(unescape(encodeURIComponent(JSON.stringify(obj))))
+ .replace(/\+/g,"-")
+ .replace(/\//g,"_")
+ .replace(/=+$/,"");
+}
+
+function decode(s){
+ s=s.replace(/-/g,"+").replace(/_/g,"/");
+ while(s.length%4)s+="=";
+ return JSON.parse(decodeURIComponent(escape(atob(s))));
+}
+
+function apply(d){
  data={...defaults,...d};
- $('questionTitle').textContent=data.title;
- $('questionText').textContent=data.question;
- $('answerHint').textContent=data.hint;
- $('finalTitle').textContent=data.final;
- $('finalMessage').textContent=data.message;
- show('app');
- $('questionScene').classList.remove('hidden');
- $('letterScene').classList.add('hidden');
- $('answer').value='';
- $('exitBtn').classList.remove('hidden');
+
+ $("qtitle").textContent=data.title;
+ $("qtext").textContent=data.question;
+ $("letterName").textContent=data.name;
+ $("hint").textContent=data.hint;
+ $("watchedText").textContent=data.final;
+ $("finalTitle").textContent=data.final;
+ $("finalMessage").textContent=data.message;
+}
+
+function start(d){
+ clearTimers();
+ apply(d);
+ $("answer").value="";
  stage=1;
+ show("question");
+ $("exit").classList.remove("hidden");
 }
 
-function exit(){
- if(!stage)return;
+function leave(){
+ clearTimers();
  stage=0;
- location.hash='';
- history.replaceState(null,'',location.pathname+location.search);
- show('studio');
+ $("exit").classList.add("hidden");
+ history.replaceState(null,"",location.pathname+location.search);
+ show("studio");
 }
 
-$('answerBtn').onclick=()=>{
- const v=$('answer').value.trim();
+$("open").onclick=()=>{
+ const v=$("answer").value.trim();
+
  if(!v){
-  $('answerHint').textContent='Сначала введи слово';
+  $("hint").textContent="Введи слово, чтобы продолжить";
   return;
  }
- if(data.answer&&v.toLocaleLowerCase('ru')!==data.answer.toLocaleLowerCase('ru')){
-  $('answerHint').textContent='Попробуй ещё раз';
-  $('answer').value='';
+
+ if(data.answer &&
+ v.toLocaleLowerCase("ru")!==data.answer.toLocaleLowerCase("ru")){
+  $("hint").textContent="Попробуй ещё раз";
   return;
  }
- $('questionScene').classList.add('hidden');
- $('letterScene').classList.remove('hidden');
+
  stage=2;
+ show("letter");
 };
 
-$('answer').addEventListener('keydown',e=>{
- if(e.key==='Enter')$('answerBtn').click();
+$("answer").addEventListener("keydown",e=>{
+ if(e.key==="Enter")$("open").click();
 });
 
-$('envelopeBtn').onclick=()=>{
- show('blueScene');
+$("envelope").onclick=()=>{
  stage=3;
- $('blueLines').textContent='';
- $('bar').style.width='0';
+ show("black");
 
- const lines=[
-  '> Запуск визуальной последовательности...',
-  '> Проверка ответа: завершено.',
-  '> Подготовка декоративного терминала...',
-  '> Соединение с вымышленным каналом: готово.',
-  '> Личные данные не запрашиваются.',
-  '> Сцена почти завершена.'
- ];
+ const chars="01ABCDEF0123456789▓▒░╳╬ЖФЖΨΩ";
+ let output="";
 
- let i=0;
- const tick=()=>{
-  if(i<lines.length){
-   $('blueLines').textContent+=lines[i++]+'\n';
-   setTimeout(tick,460);
-  }else{
-   $('bar').style.width='100%';
-   $('blueStatus').textContent='Симуляция завершена.';
-   setTimeout(()=>{
-    show('finalScene');
-    stage=4;
-   },1300);
+ for(let i=0;i<150;i++){
+  for(let j=0;j<6;j++){
+   output+=chars[Math.floor(Math.random()*chars.length)];
   }
- };
- setTimeout(tick,350);
+  output+="  ";
+  if(i%2)output+="\n";
+ }
+
+ $("rain").textContent=output;
+
+ let errors="";
+
+ for(let i=0;i<18;i++){
+  errors+="ERROR: 0x"+
+   Math.floor(Math.random()*0xffffff)
+   .toString(16).toUpperCase().padStart(6,"0")+"\n";
+ }
+
+ $("error-stream").textContent=errors;
+
+ later(()=>{
+  stage=4;
+  show("blue");
+
+  later(()=>{
+   stage=5;
+   show("finish");
+
+   let finalErrors="";
+
+   for(let i=0;i<20;i++){
+    finalErrors+="0x"+Math.random().toString(16).slice(2,8)+" :: NULL\n";
+   }
+
+   $("finish-errors").textContent=finalErrors;
+  },6500);
+
+ },5200);
 };
 
-$('restartBtn').onclick=()=>begin(data);
-$('exitBtn').onclick=exit;
+$("restart").onclick=()=>start(data);
 
-document.addEventListener('keydown',e=>{
- if(e.key==='Escape')exit();
+$("exit").onclick=leave;
+
+document.addEventListener("keydown",e=>{
+ if(e.key==="Escape"&&stage)leave();
 });
 
-window.addEventListener('popstate',()=>{
- if(stage)exit();
+window.addEventListener("popstate",()=>{
+ if(stage)leave();
 });
 
-$('createLink').onclick=()=>{
+$("make").onclick=()=>{
  const d={
-  title:$('sTitle').value||defaults.title,
-  question:$('sQuestion').value||defaults.question,
-  hint:$('sHint').value||defaults.hint,
-  answer:$('sAnswer').value.trim(),
-  final:$('sFinal').value||defaults.final,
-  message:$('sMessage').value||defaults.message
+  title:$("sTitle").value||defaults.title,
+  question:$("sQuestion").value||defaults.question,
+  name:$("sName").value||defaults.name,
+  hint:$("sHint").value||defaults.hint,
+  answer:$("sAnswer").value.trim(),
+  final:$("sFinal").value||defaults.final,
+  message:$("sMessage").value||defaults.message
  };
 
- const url=location.href.split('#')[0].split('?')[0]+'#story='+enc(d);
- $('linkOut').replaceChildren();
+ const url=location.href.split("#")[0].split("?")[0]+"#story="+encode(d);
 
- const a=document.createElement('a');
- a.href=url;
- a.textContent=url;
- $('linkOut').append(a);
+ $("linkout").textContent=url;
 
  if(navigator.clipboard?.writeText){
   navigator.clipboard.writeText(url).catch(()=>{});
  }
 };
 
-if(location.hash.startsWith('#story=')){
+if(location.hash.startsWith("#story=")){
  try{
-  begin(dec(location.hash.slice(7)));
+  start(decode(location.hash.slice(7)));
  }catch{
-  show('studio');
+  show("studio");
  }
-}else if(new URLSearchParams(location.search).has('studio')){
- show('studio');
+}else if(new URLSearchParams(location.search).has("studio")){
+ show("studio");
 }else{
- show('studio');
+ start(defaults);
 }
+
 })();
 </script>
+
 </body>
 </html>

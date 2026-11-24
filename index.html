@@ -3,663 +3,556 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#080008">
-<title>Тебе сообщение</title>
-
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#08070b">
+<title>Private message</title>
 <style>
-*{box-sizing:border-box}
-html,body{margin:0;min-height:100%;background:#000;color:white}
-body{overflow-x:hidden}
-.hidden{display:none!important}
-button,input{font:inherit}
-button{cursor:pointer}
+:root {
+  --pink: #ff72c9;
+  --wine: #260b20;
+  --deep: #08070b;
+}
+* { box-sizing: border-box; }
+html, body {
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #050508;
+  color: white;
+  font-family: Arial, sans-serif;
+}
+button, input { font: inherit; }
+button { cursor: pointer; }
+#app {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 100svh;
+  overflow: hidden;
+  background: #08070b;
+}
+.scene {
+  position: absolute;
+  inset: 0;
+  display: none;
+  overflow: hidden;
+  animation: sceneIn .55s ease both;
+}
+.scene.active { display: block; }
+@keyframes sceneIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+.exit {
+  position: absolute;
+  z-index: 50;
+  top: max(12px, env(safe-area-inset-top));
+  right: 15px;
+  border: 0;
+  background: transparent;
+  color: #ffffff75;
+  font-size: 19px;
+  padding: 7px;
+}
+.exit:active { color: white; }
 
-/* QUESTION */
-.scene{
- min-height:100svh;
- display:flex;
- align-items:center;
- justify-content:center;
- flex-direction:column;
- position:relative;
- overflow:hidden;
- text-align:center;
- padding:25px;
+/* 01 — MESSENGER */
+#messenger {
+  background:
+    radial-gradient(ellipse at 50% 30%, #17243a 0%, #0c1422 48%, #080b12 100%);
+  padding: max(18px, env(safe-area-inset-top)) 14px 20px;
 }
-#question{
- background:radial-gradient(ellipse at center,#71384f,#3b1a2c 55%,#120912);
+.chat-top {
+  height: 55px;
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  border-bottom: 1px solid #ffffff16;
+  color: #e8edf8;
+  font-size: 14px;
 }
-#question:after{
- content:"";
- position:absolute;
- inset:0;
- pointer-events:none;
- background:repeating-linear-gradient(
-  0deg,transparent 0 3px,#ffffff08 4px
- );
+.back { font-size: 24px; color: #9db5d9; }
+.avatar {
+  width: 34px; height: 34px; border-radius: 50%;
+  background: linear-gradient(140deg, #5e7a9e, #182638);
+  border: 1px solid #ffffff40;
 }
-.question-content{
- position:relative;
- z-index:1;
- width:min(100%,390px);
+.chat-name { font-weight: 600; }
+.chat-status { color: #8c9bb0; font-size: 11px; margin-top: 3px; }
+.chat-body {
+  position: absolute;
+  top: 82px; bottom: 88px; left: 13px; right: 13px;
+  display: flex; flex-direction: column; gap: 12px;
+  justify-content: flex-end;
 }
-.question-title{
- font:normal clamp(26px,7vw,36px)/1.3 Georgia,serif;
- text-shadow:0 0 20px #ffb5d3;
+.date-label {
+  text-align: center; color: #9ba8bd; font-size: 10px;
+  margin-bottom: 8px;
 }
-.question-sub{
- color:#f5c5d7;
- font:italic 17px Georgia,serif;
- margin:25px 0;
+.bubble {
+  max-width: 83%;
+  padding: 12px 13px;
+  border-radius: 14px 14px 14px 4px;
+  background: #202d40;
+  color: #e5eaf2;
+  font-size: 13px; line-height: 1.5;
+  box-shadow: 0 4px 18px #0003;
 }
-#answer{
- width:100%;
- height:48px;
- border:1px solid #f4a9c6;
- border-radius:30px;
- background:#6b3a5066;
- color:white;
- text-align:center;
- outline:none;
- padding:10px;
+.bubble.mine {
+  align-self: flex-end;
+  background: #315c80;
+  border-radius: 14px 14px 4px 14px;
 }
-#answer::placeholder{color:#f2c2d3}
-.pink-button{
- width:100%;
- height:48px;
- margin-top:12px;
- border:0;
- border-radius:30px;
- background:linear-gradient(90deg,#ffc6d9,#ff9cbd);
- color:#57243b;
- letter-spacing:1px;
- box-shadow:0 0 25px #ffb1ce88;
+.bubble small { display: block; color: #a9bad0; text-align: right; margin-top: 5px; }
+.chat-bottom {
+  position: absolute;
+  bottom: max(14px, env(safe-area-inset-bottom));
+  left: 13px; right: 13px;
+  height: 48px;
+  border: 1px solid #ffffff1c;
+  border-radius: 24px;
+  display: flex; align-items: center;
+  padding: 0 15px; color: #8493a8; font-size: 13px;
 }
-.hint{
- color:#e9bfd0;
- font:11px system-ui,sans-serif;
- margin-top:22px;
-}
-
-/* LETTER */
-#letter{
- background:radial-gradient(ellipse at center,#542536,#29121e 60%,#100a11);
-}
-.letter-name{
- font:italic 20px Georgia,serif;
- color:#ffc2d8;
-}
-.letter-title{
- font:32px Georgia,serif;
- text-shadow:0 0 25px #ffabc9;
- margin-top:12px;
-}
-.envelope{
- width:min(72vw,270px);
- height:165px;
- margin:35px 0 20px;
- border:0;
- border-radius:5px;
- background:linear-gradient(145deg,#ffe3e8,#f3a8bd);
- box-shadow:0 0 45px #ff9fbe88;
- position:relative;
- overflow:hidden;
-}
-.envelope:before{
- content:"";
- position:absolute;
- inset:0;
- background:#e98eaa;
- clip-path:polygon(0 0,50% 60%,100% 0);
-}
-.envelope:after{
- content:"";
- position:absolute;
- inset:0;
- background:
- linear-gradient(35deg,transparent 49%,#ffd5df 50%) left/50% 100% no-repeat,
- linear-gradient(-35deg,transparent 49%,#f8bfd0 50%) right/50% 100% no-repeat;
-}
-.envelope span{
- position:absolute;
- z-index:2;
- left:calc(50% - 18px);
- top:58px;
- font-size:34px;
- color:#9e3558;
+.chat-bottom span:last-child { margin-left: auto; color: #8fb6e9; font-size: 20px; }
+.chat-continue {
+  position: absolute; bottom: 76px; left: 50%; transform: translateX(-50%);
+  border: 1px solid #8daedb55; border-radius: 20px;
+  padding: 9px 18px; background: #16263a; color: #dceaff;
+  font-size: 12px;
 }
 
-/* BLACK CODE SCENE */
-#black{
- background:#000;
- color:#eee;
- font-family:"Courier New",monospace;
+/* 02 — PINK BROWSER PAGE */
+#question {
+  background:
+    radial-gradient(ellipse at 50% 45%, #59264d 0%, #35152f 45%, #1a0b1b 100%);
 }
-#rain{
- position:absolute;
- inset:0;
- overflow:hidden;
- color:#e9e9e9;
- font:11px/1.5 monospace;
- white-space:pre-wrap;
- overflow-wrap:anywhere;
- opacity:.9;
- animation:flicker .13s infinite alternate;
+.browser-bar {
+  position: absolute; top: 0; left: 0; right: 0;
+  height: max(54px, calc(42px + env(safe-area-inset-top)));
+  padding: max(8px, env(safe-area-inset-top)) 14px 7px;
+  display: flex; align-items: center; gap: 10px;
+  background: #211a2a;
+  border-bottom: 1px solid #ffffff20;
+  color: #bdb3c8;
 }
-@keyframes flicker{
- from{opacity:.65}
- to{opacity:1}
+.browser-dot { width: 7px; height: 7px; border-radius: 50%; background: #ff7cce; }
+.address {
+  flex: 1; text-align: center; font-size: 11px;
+  background: #ffffff0d; border-radius: 20px; padding: 8px;
 }
-#error-stream{
- position:absolute;
- top:5%;
- left:0;
- width:100%;
- color:#eee;
- font:10px/1.4 monospace;
- white-space:pre-wrap;
- overflow-wrap:anywhere;
- text-shadow:0 0 5px white;
+.browser-icons { font-size: 13px; letter-spacing: 5px; }
+.question-content {
+  position: absolute; left: 8%; right: 8%;
+  top: 43%; transform: translateY(-50%);
+  text-align: center;
 }
-.watched{
- position:relative;
- z-index:2;
- margin:auto;
- font:18px Georgia,serif;
- letter-spacing:1px;
- text-shadow:0 0 15px white;
+.question-kicker {
+  color: #eeb9dd; font-size: 10px; letter-spacing: 3px;
+  margin-bottom: 22px; opacity: .8;
 }
-.eye{
- display:block;
- font-size:50px;
+.question-title {
+  font-size: clamp(18px, 5vw, 23px);
+  line-height: 1.5; font-weight: 500;
+  text-shadow: 0 0 18px #ff6acb88;
 }
-
-/* BLUE DOS SCENE */
-#blue{
- background:#000;
- padding:0;
+.question-sub {
+  color: #e7b7d8; font-size: 12px; margin-top: 14px;
 }
-.blue-band{
- width:100%;
- min-height:48svh;
- background:#071cff;
- display:flex;
- align-items:center;
- justify-content:center;
- padding:20px 12px;
- font:10px/1.4 "Courier New",monospace;
+.answer {
+  width: 100%; margin-top: 28px;
+  padding: 15px 13px; border: 1px solid #ff9cdb66;
+  border-radius: 4px; outline: none;
+  background: #220e23aa; color: white;
+  text-align: center; font-size: 14px;
+  box-shadow: 0 0 24px #ff54c944;
 }
-.dos-window{
- width:min(100%,590px);
- border:1px solid white;
- padding:10px;
- box-shadow:0 0 0 1px #899aff;
+.answer::placeholder { color: #d7a5c7; }
+.pink-button {
+  display: block; width: 100%; margin-top: 15px;
+  border: 0; border-radius: 3px; padding: 14px;
+  color: #401333; font-weight: 700; font-size: 12px;
+  background: linear-gradient(90deg, #ffb2e5, #ff75d0);
+  box-shadow: 0 0 24px #ff64d988, 0 0 55px #ff64d944;
 }
-.dos-head{
- text-align:center;
- text-decoration:underline;
- margin-bottom:10px;
-}
-.dos-copy{
- font-size:9px;
- text-align:left;
- line-height:1.4;
-}
-.dos-label{
- text-align:center;
- margin:12px 0 4px;
-}
-.dos-input{
- height:17px;
- border:1px solid white;
- display:flex;
- align-items:center;
- padding-left:4px;
-}
-.cursor{
- display:inline-block;
- width:7px;
- height:11px;
- background:white;
- animation:blink .6s steps(2) infinite;
-}
-@keyframes blink{50%{opacity:0}}
-.dos-foot{
- display:flex;
- justify-content:space-between;
- font-size:8px;
- margin-top:7px;
+.pink-button:active { transform: scale(.98); }
+.question-foot {
+  position: absolute; bottom: 10%;
+  left: 0; right: 0; text-align: center;
+  color: #e6b7d4; font-size: 9px; letter-spacing: 2px; opacity: .6;
 }
 
-/* FINAL */
-#finish{
- background:#000;
- font-family:"Courier New",monospace;
+/* 03 — PAUSE */
+#pause {
+  background: radial-gradient(ellipse, #260e24, #100911 70%);
 }
-#finish-errors{
- position:absolute;
- top:15%;
- left:7px;
- width:48%;
- text-align:left;
- color:#ddd;
- font-size:10px;
- line-height:1.4;
- white-space:pre-wrap;
+.pause-text {
+  position: absolute; top: 50%; width: 100%;
+  transform: translateY(-50%); text-align: center;
+  color: #f5d6ec; font-family: monospace; font-size: 11px;
+  letter-spacing: 1px; animation: pulse 2.2s infinite;
 }
-.final-content{
- position:relative;
- z-index:2;
+@keyframes pulse { 50% { opacity: .25; } }
+
+/* 04 — ENVELOPE */
+#envelope {
+  background: radial-gradient(ellipse at center, #4a2140 0%, #1b0c1c 75%);
 }
-.final-eye{
- font-size:48px;
- display:block;
+.envelope-wrap {
+  position: absolute; left: 50%; top: 50%;
+  transform: translate(-50%, -50%);
+  width: min(72vw, 290px); height: 170px;
+  filter: drop-shadow(0 0 28px #ffb6e9aa);
+  perspective: 700px;
 }
-.final-title{
- font:20px Georgia,serif;
- letter-spacing:1px;
+.envelope {
+  position: absolute; inset: 15px 0 0;
+  background: #ffe5ee;
+  border-radius: 3px;
+  overflow: visible;
 }
-.final-message{
- max-width:340px;
- margin:24px auto;
- color:#ccc;
- font:12px/1.6 system-ui,sans-serif;
+.envelope:before, .envelope:after {
+  content: ""; position: absolute; bottom: 0; width: 0; height: 0;
+  border-style: solid; z-index: 2;
 }
-.restart{
- background:transparent;
- color:#ddd;
- border:1px solid #777;
- padding:11px 20px;
- font:12px monospace;
+.envelope:before {
+  left: 0; border-width: 75px 145px 0 0;
+  border-color: transparent #f5bfd5 transparent transparent;
+}
+.envelope:after {
+  right: 0; border-width: 75px 0 0 145px;
+  border-color: transparent transparent transparent #f8cadd;
+}
+.flap {
+  position: absolute; left: 0; top: 0; width: 0; height: 0;
+  border-left: 145px solid transparent;
+  border-right: 145px solid transparent;
+  border-top: 90px solid #fff0f4;
+  transform-origin: top; transition: transform .8s ease;
+  z-index: 4;
+}
+.seal {
+  position: absolute; z-index: 5;
+  left: 50%; top: 54px; transform: translateX(-50%);
+  width: 28px; height: 28px; border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #ffb0d8, #d62e83 70%);
+  box-shadow: 0 0 16px #ff69bd;
+}
+.envelope.open .flap { transform: rotateX(180deg); }
+.envelope.open .seal { opacity: 0; transition: opacity .3s; }
+.envelope-note {
+  position: absolute; z-index: 1; left: 10%; right: 10%;
+  top: -30px; height: 105px; background: #fffafc;
+  color: #64264f; text-align: center; padding-top: 25px;
+  font: 10px monospace; transition: transform .8s .3s;
+}
+.envelope.open .envelope-note { transform: translateY(-65px); }
+.envelope-caption {
+  position: absolute; top: calc(50% + 125px); width: 100%;
+  text-align: center; color: #f6d8ec; font: 10px monospace;
+  letter-spacing: 2px;
 }
 
-/* EDITOR */
-#studio{
- max-width:620px;
- margin:25px auto;
- padding:22px;
- color:white;
- background:#151018;
- border:1px solid #7d3b54;
- border-radius:14px;
- font:14px system-ui,sans-serif;
+/* 05 — GLITCH */
+#glitch {
+  background: #030305;
 }
-#studio label{
- display:block;
- margin:13px 0 5px;
- color:#f2bdcf;
- font-size:12px;
+.glitch-screen {
+  position: absolute; inset: 0;
+  display: grid; place-items: center;
+  overflow: hidden;
+  background:
+    repeating-linear-gradient(0deg, #000 0 3px, #111 4px 5px),
+    #000;
 }
-#studio input{
- width:100%;
- padding:11px;
- border:1px solid #78445a;
- border-radius:7px;
- background:#09070c;
- color:white;
+.glitch-art {
+  position: absolute; inset: 0;
+  background:
+    linear-gradient(13deg, transparent 35%, #ff003c 36% 38%, transparent 39%),
+    linear-gradient(172deg, transparent 22%, #00f0ff 23% 29%, transparent 30%),
+    repeating-linear-gradient(90deg, #ff00a8 0 3px, #1aff00 4px 8px, #0800ff 9px 12px);
+  opacity: .72; mix-blend-mode: screen;
+  animation: distort .12s steps(2) infinite;
 }
-#studio button{
- margin-top:16px;
- padding:12px 18px;
- background:#f3a9c4;
- border:0;
- border-radius:20px;
- color:#321321;
+.glitch-code {
+  position: relative; z-index: 2; width: 100%;
+  padding: 15px 5px; color: #fff;
+  text-align: center; font: 10px/1.5 monospace;
+  text-shadow: 2px 0 red, -2px 0 cyan;
+  animation: shake .17s infinite;
 }
-#linkout{
- overflow-wrap:anywhere;
- color:#ffc5dc;
- margin-top:15px;
+@keyframes distort {
+  0% { transform: translate(0,0) skew(0); }
+  50% { transform: translate(7px,-3px) skew(2deg); }
+  100% { transform: translate(-5px,2px) skew(-3deg); }
 }
-.exit{
- position:fixed;
- z-index:20;
- right:10px;
- top:10px;
- border:1px solid #7778;
- background:#0009;
- color:#ddd;
- border-radius:20px;
- padding:7px 10px;
- font:10px system-ui,sans-serif;
+@keyframes shake {
+  0%,100% { transform: translateX(0); }
+  25% { transform: translateX(4px); }
+  75% { transform: translateX(-5px); }
+}
+
+/* 06 — TERMINAL */
+#terminal { background: #000; }
+.terminal-lines {
+  position: absolute; top: 40%; left: 8%; right: 8%;
+  color: #e8e8e8; font: 10px/1.8 monospace;
+  white-space: pre-wrap;
+}
+.terminal-lines .red { color: #ff3333; }
+.cursor { display: inline-block; width: 6px; height: 11px; background: #ddd; animation: blink .7s infinite; }
+@keyframes blink { 50% { opacity: 0; } }
+.ascii-panel {
+  position: absolute; top: 48%; left: 0; right: 0;
+  height: 165px; display: grid; place-items: center;
+  background: #8e0008; color: #ffb3b3;
+  font: 8px/1.15 monospace; white-space: pre;
+  text-shadow: 0 0 7px #ff0000;
+}
+.terminal-caption {
+  position: absolute; top: calc(48% + 180px); width: 100%;
+  text-align: center; color: #aaa; font: 9px monospace;
+}
+
+/* 07 — DOS */
+#dos { background: #000; }
+.dos-band {
+  position: absolute; left: 0; right: 0; top: 40%;
+  height: 190px; background: #0900ff;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 0 35px #1300ff55;
+}
+.dos-window {
+  width: min(86%, 390px); min-height: 105px;
+  border: 1px solid #e6e6ff;
+  background: #05009b; color: #fff;
+  font: 10px/1.5 monospace;
+  padding: 10px 11px;
+  box-shadow: 0 0 0 1px #7777ff;
+}
+.dos-title {
+  border-bottom: 1px solid #b8b8ff;
+  padding-bottom: 5px; margin-bottom: 8px;
+  text-align: center; letter-spacing: 1px;
+}
+.dos-message { min-height: 31px; }
+.dos-red {
+  display: block; margin-top: 7px; padding: 5px;
+  text-align: center; background: #a90000; color: white;
+  border: 1px solid #ffaaaa;
+}
+.dos-actions {
+  display: flex; justify-content: center; gap: 10px; margin-top: 8px;
+}
+.dos-actions button {
+  border: 1px solid #ddd; background: #00007d;
+  color: white; padding: 5px 13px; font: 10px monospace;
+}
+.dos-footer {
+  position: absolute; bottom: 13%; width: 100%;
+  text-align: center; color: #777; font: 9px monospace;
+}
+#reveal {
+  position: absolute; inset: 0; display: none;
+  place-items: center; padding: 28px;
+  background: #08070b; text-align: center; z-index: 10;
+}
+#reveal.show { display: grid; animation: sceneIn .8s; }
+.reveal-box { max-width: 330px; }
+.reveal-box h2 { color: #ff8bd4; font-size: 19px; font-weight: 500; }
+.reveal-box p { color: #c5bdc9; font-size: 13px; line-height: 1.7; }
+.reveal-box button {
+  margin-top: 16px; border: 1px solid #ff8bd477;
+  background: transparent; color: #ffb1df; padding: 11px 24px;
+}
+@media (max-height: 650px) {
+  .question-content { top: 48%; }
+  .envelope-wrap { transform: translate(-50%, -50%) scale(.85); }
+  .ascii-panel { height: 135px; }
 }
 </style>
 </head>
-
 <body>
+<div id="app">
 
-<button id="exit" class="exit hidden">Выйти</button>
-
-<main>
-
-<!-- ВОПРОС -->
-<section id="question" class="scene">
- <div class="question-content">
-  <h1 class="question-title" id="qtitle">
-   Эта эмоция закрыта словом
-  </h1>
-
-  <p class="question-sub" id="qtext">
-   Где мы познакомились?
-  </p>
-
-  <input id="answer" placeholder="слово" maxlength="80">
-
-  <button class="pink-button" id="open">
-   Открыть
-  </button>
-
-  <p class="hint" id="hint">
-   Введи ответ, чтобы продолжить
-  </p>
- </div>
+<section class="scene active" id="messenger">
+  <div class="chat-top">
+    <span class="back">‹</span><div class="avatar"></div>
+    <div><div class="chat-name">Неизвестный контакт</div><div class="chat-status">был(а) недавно</div></div>
+  </div>
+  <div class="chat-body">
+    <div class="date-label">СЕГОДНЯ</div>
+    <div class="bubble">Привет. Ты ведь получил(а) моё сообщение?</div>
+    <div class="bubble">Я отправил тебе кое-что. Открой ссылку, когда будешь готов(а).<small>21:43</small></div>
+    <div class="bubble mine">Что это?</div>
+    <div class="bubble">Просто ответь на один вопрос. И всё станет понятно.<small>21:44</small></div>
+  </div>
+  <button class="chat-continue" onclick="go('question')">Открыть сообщение ↗</button>
+  <div class="chat-bottom"><span>Сообщение...</span><span>➤</span></div>
 </section>
 
-<!-- ПИСЬМО -->
-<section id="letter" class="scene hidden">
- <div class="letter-name" id="letterName">Для тебя</div>
- <div class="letter-title">тебе письмо</div>
-
- <button class="envelope" id="envelope">
-  <span>✉</span>
- </button>
-
- <div class="hint">НАЖМИ, ЧТОБЫ ПРОДОЛЖИТЬ</div>
+<section class="scene" id="question">
+  <div class="browser-bar">
+    <span class="browser-dot"></span>
+    <div class="address">private-message / secure</div>
+    <div class="browser-icons">⋮</div>
+  </div>
+  <div class="question-content">
+    <div class="question-kicker">ЛИЧНОЕ СООБЩЕНИЕ</div>
+    <div class="question-title">Ты уверен(а), что знаешь, кто отправил тебе эту ссылку?</div>
+    <div class="question-sub">Напиши свой ответ ниже.</div>
+    <input class="answer" id="answer" placeholder="Твой ответ..." maxlength="80">
+    <button class="pink-button" onclick="submitAnswer()">ПРОДОЛЖИТЬ</button>
+  </div>
+  <div class="question-foot">CONNECTION ESTABLISHED</div>
 </section>
 
-<!-- ЧЁРНЫЙ ЭКРАН С КОДАМИ -->
-<section id="black" class="scene hidden">
- <div id="rain"></div>
- <div id="error-stream"></div>
-
- <div class="watched">
-  <span class="eye">◉</span>
-  <span id="watchedText">ВАС ЗАМЕТИЛИ</span>
- </div>
+<section class="scene" id="pause">
+  <div class="pause-text">проверка сообщения...</div>
 </section>
 
-<!-- СИНИЙ DOS -->
-<section id="blue" class="scene hidden">
- <div class="blue-band">
-  <div class="dos-window">
-   <div class="dos-head">
-    UNKNOWN SYSTEM / MESSAGE
-   </div>
+<section class="scene" id="envelope">
+  <div class="envelope-wrap">
+    <div class="envelope" id="letter">
+      <div class="envelope-note">ТЫ ДЕЙСТВИТЕЛЬНО<br>ХОЧЕШЬ УЗНАТЬ?</div>
+      <div class="flap"></div><div class="seal"></div>
+    </div>
+  </div>
+  <div class="envelope-caption">У ТЕБЯ ЕСТЬ НОВОЕ ПИСЬМО</div>
+</section>
 
-   <div class="dos-copy" id="doscopy">
-    INITIALIZING...
-    <br><br>
-    0x7F 0xA9 0xFF NULL
-    <br>
-    01001000 01000101 01001100 01001100 01001111
-    <br><br>
-    UNKNOWN PROCESS DETECTED
-    <br>
-    STORY SEQUENCE: ACTIVE
-    <br>
-    NO DEVICE ACCESS
-   </div>
+<section class="scene" id="glitch">
+  <div class="glitch-screen">
+    <div class="glitch-art"></div>
+    <div class="glitch-code" id="glitchText">
+      SYSTEM RESPONSE: UNKNOWN<br>
+      01001000 01000101 01001100 01001100 01001111<br>
+      CONNECTION LOST // RETRYING<br>
+      ▓▒░ ACCESSING MESSAGE ░▒▓<br>
+      ERROR 0x0000A7 // UNKNOWN SOURCE
+    </div>
+  </div>
+</section>
 
-   <div class="dos-label">
-    ВВЕДИТЕ КОД РАЗБЛОКИРОВКИ:
-   </div>
-
-   <div class="dos-input">
+<section class="scene" id="terminal">
+  <div class="terminal-lines" id="terminalText">
+    initializing sequence...<br>
+    loading message fragments...<br>
+    <span class="red">warning: corrupted data detected</span><br>
+    checking connection...<br>
+    <span class="red">unknown source</span><br>
     <span class="cursor"></span>
-   </div>
-
-   <div class="dos-foot">
-    <span>STORY_MODE: ACTIVE</span>
-    <span>ENTER [ДАЛЕЕ]</span>
-   </div>
   </div>
- </div>
-</section>
-
-<!-- ФИНАЛ -->
-<section id="finish" class="scene hidden">
- <div id="finish-errors"></div>
-
- <div class="final-content">
-  <span class="final-eye">◉</span>
-
-  <div class="final-title" id="finalTitle">
-   ВАС ЗАМЕТИЛИ
+  <div class="ascii-panel">
+       .-=========-.
+      /  .-"""-.   \
+     |  / .---. \   |
+     | | |     | |  |
+     | | |     | |  |
+     |  \ '---' /   |
+      \  '-----'   /
+       '---------'
+       /|       |\
+      /_|_______|_\
+        /  |  \
+       /___|___\
   </div>
-
-  <p class="final-message" id="finalMessage">
-   Это была вымышленная интерактивная история.
-   Никакого доступа к устройству или личным данным не происходило.
-  </p>
-
-  <button class="restart" id="restart">
-   ПРОЙТИ ЕЩЁ РАЗ
-  </button>
- </div>
+  <div class="terminal-caption">SIGNAL DETECTED // DO NOT PANIC</div>
 </section>
 
-</main>
-
-<!-- РЕДАКТОР -->
-<section id="studio" class="hidden">
- <h2>Cyber Prank Control</h2>
-
- <label>Заголовок вопроса</label>
- <input id="sTitle" value="Эта эмоция закрыта словом">
-
- <label>Вопрос</label>
- <input id="sQuestion" value="Где мы познакомились?">
-
- <label>Имя над письмом</label>
- <input id="sName" value="Для тебя">
-
- <label>Подсказка</label>
- <input id="sHint" value="Введи ответ, чтобы продолжить">
-
- <label>Правильный ответ (необязательно)</label>
- <input id="sAnswer" placeholder="Ответ">
-
- <label>Надпись в финале</label>
- <input id="sFinal" value="ВАС ЗАМЕТИЛИ">
-
- <label>Финальный текст</label>
- <input id="sMessage" value="Это была вымышленная интерактивная история. Никакого доступа к устройству или личным данным не происходило.">
-
- <button id="make">Создать ссылку</button>
-
- <div id="linkout"></div>
+<section class="scene" id="dos">
+  <div class="dos-band">
+    <div class="dos-window">
+      <div class="dos-title">MESSAGE SERVICE — SYSTEM NOTICE</div>
+      <div class="dos-message" id="dosMessage">Проверка завершена. Получен неизвестный ответ.</div>
+      <span class="dos-red" id="dosRed">ОБНАРУЖЕН НЕИЗВЕСТНЫЙ ФРАГМЕНТ</span>
+      <div class="dos-actions">
+        <button onclick="nextDos()">OK</button>
+        <button onclick="nextDos()">ДАЛЕЕ</button>
+      </div>
+    </div>
+  </div>
+  <div class="dos-footer">DOS MODE // MESSAGE SEQUENCE</div>
 </section>
+
+<div id="reveal">
+  <div class="reveal-box">
+    <h2>Это была история.</h2>
+    <p>Все сообщения, системные строки и эффекты были частью интерактивного сценария. Никакие данные устройства не проверялись, доступ к телефону не выполнялся.</p>
+    <button onclick="restart()">ПРОЙТИ ЕЩЁ РАЗ</button>
+  </div>
+</div>
+
+<button class="exit" onclick="restart()" aria-label="Выйти из сценария">×</button>
+</div>
 
 <script>
-(()=>{
-const $=id=>document.getElementById(id);
+const scenes = [...document.querySelectorAll('.scene')];
+let dosStep = 0;
+let timers = [];
 
-const defaults={
- title:"Эта эмоция закрыта словом",
- question:"Где мы познакомились?",
- name:"Для тебя",
- hint:"Введи ответ, чтобы продолжить",
- answer:"",
- final:"ВАС ЗАМЕТИЛИ",
- message:"Это была вымышленная интерактивная история. Никакого доступа к устройству или личным данным не происходило."
-};
-
-let data={...defaults};
-let timers=[];
-let stage=0;
-
-function clearTimers(){
- timers.forEach(clearTimeout);
- timers=[];
+function clearTimers() {
+  timers.forEach(clearTimeout);
+  timers = [];
 }
-
-function later(fn,ms){
- timers.push(setTimeout(fn,ms));
+function later(fn, ms) {
+  const id = setTimeout(fn, ms);
+  timers.push(id);
 }
-
-function show(id){
- ["question","letter","black","blue","finish","studio"]
- .forEach(x=>$(x).classList.toggle("hidden",x!==id));
+function go(id) {
+  clearTimers();
+  scenes.forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
 }
-
-function encode(obj){
- return btoa(unescape(encodeURIComponent(JSON.stringify(obj))))
- .replace(/\+/g,"-")
- .replace(/\//g,"_")
- .replace(/=+$/,"");
-}
-
-function decode(s){
- s=s.replace(/-/g,"+").replace(/_/g,"/");
- while(s.length%4)s+="=";
- return JSON.parse(decodeURIComponent(escape(atob(s))));
-}
-
-function apply(d){
- data={...defaults,...d};
-
- $("qtitle").textContent=data.title;
- $("qtext").textContent=data.question;
- $("letterName").textContent=data.name;
- $("hint").textContent=data.hint;
- $("watchedText").textContent=data.final;
- $("finalTitle").textContent=data.final;
- $("finalMessage").textContent=data.message;
-}
-
-function start(d){
- clearTimers();
- apply(d);
- $("answer").value="";
- stage=1;
- show("question");
- $("exit").classList.remove("hidden");
-}
-
-function leave(){
- clearTimers();
- stage=0;
- $("exit").classList.add("hidden");
- history.replaceState(null,"",location.pathname+location.search);
- show("studio");
-}
-
-$("open").onclick=()=>{
- const v=$("answer").value.trim();
-
- if(!v){
-  $("hint").textContent="Введи слово, чтобы продолжить";
-  return;
- }
-
- if(data.answer &&
- v.toLocaleLowerCase("ru")!==data.answer.toLocaleLowerCase("ru")){
-  $("hint").textContent="Попробуй ещё раз";
-  return;
- }
-
- stage=2;
- show("letter");
-};
-
-$("answer").addEventListener("keydown",e=>{
- if(e.key==="Enter")$("open").click();
-});
-
-$("envelope").onclick=()=>{
- stage=3;
- show("black");
-
- const chars="01ABCDEF0123456789▓▒░╳╬ЖФЖΨΩ";
- let output="";
-
- for(let i=0;i<150;i++){
-  for(let j=0;j<6;j++){
-   output+=chars[Math.floor(Math.random()*chars.length)];
+function submitAnswer() {
+  const input = document.getElementById('answer');
+  if (!input.value.trim()) {
+    input.focus();
+    input.placeholder = 'Сначала напиши ответ...';
+    return;
   }
-  output+="  ";
-  if(i%2)output+="\n";
- }
-
- $("rain").textContent=output;
-
- let errors="";
-
- for(let i=0;i<18;i++){
-  errors+="ERROR: 0x"+
-   Math.floor(Math.random()*0xffffff)
-   .toString(16).toUpperCase().padStart(6,"0")+"\n";
- }
-
- $("error-stream").textContent=errors;
-
- later(()=>{
-  stage=4;
-  show("blue");
-
-  later(()=>{
-   stage=5;
-   show("finish");
-
-   let finalErrors="";
-
-   for(let i=0;i<20;i++){
-    finalErrors+="0x"+Math.random().toString(16).slice(2,8)+" :: NULL\n";
-   }
-
-   $("finish-errors").textContent=finalErrors;
-  },6500);
-
- },5200);
-};
-
-$("restart").onclick=()=>start(data);
-
-$("exit").onclick=leave;
-
-document.addEventListener("keydown",e=>{
- if(e.key==="Escape"&&stage)leave();
-});
-
-window.addEventListener("popstate",()=>{
- if(stage)leave();
-});
-
-$("make").onclick=()=>{
- const d={
-  title:$("sTitle").value||defaults.title,
-  question:$("sQuestion").value||defaults.question,
-  name:$("sName").value||defaults.name,
-  hint:$("sHint").value||defaults.hint,
-  answer:$("sAnswer").value.trim(),
-  final:$("sFinal").value||defaults.final,
-  message:$("sMessage").value||defaults.message
- };
-
- const url=location.href.split("#")[0].split("?")[0]+"#story="+encode(d);
-
- $("linkout").textContent=url;
-
- if(navigator.clipboard?.writeText){
-  navigator.clipboard.writeText(url).catch(()=>{});
- }
-};
-
-if(location.hash.startsWith("#story=")){
- try{
-  start(decode(location.hash.slice(7)));
- }catch{
-  show("studio");
- }
-}else if(new URLSearchParams(location.search).has("studio")){
- show("studio");
-}else{
- start(defaults);
+  input.blur();
+  go('pause');
+  later(() => {
+    go('envelope');
+    later(() => document.getElementById('letter').classList.add('open'), 900);
+    later(() => {
+      go('glitch');
+      later(() => go('terminal'), 2400);
+      later(() => {
+        go('dos');
+        dosStep = 0;
+      }, 5700);
+    }, 4000);
+  }, 1700);
 }
-
-})();
+const dosMessages = [
+  ['Проверка завершена. Получен неизвестный ответ.', 'ОБНАРУЖЕН НЕИЗВЕСТНЫЙ ФРАГМЕНТ'],
+  ['Источник сообщения не удалось определить.', 'ИСТОЧНИК: UNKNOWN'],
+  ['Последний этап сценария почти завершён.', 'ОЖИДАНИЕ ПОДТВЕРЖДЕНИЯ...'],
+  ['Сценарий завершён. Это была постановочная история.', 'РЕАЛЬНОГО ДОСТУПА К УСТРОЙСТВУ НЕ БЫЛО']
+];
+function nextDos() {
+  dosStep++;
+  if (dosStep >= dosMessages.length) {
+    document.getElementById('reveal').classList.add('show');
+    return;
+  }
+  document.getElementById('dosMessage').textContent = dosMessages[dosStep][0];
+  document.getElementById('dosRed').textContent = dosMessages[dosStep][1];
+}
+function restart() {
+  clearTimers();
+  document.getElementById('reveal').classList.remove('show');
+  document.getElementById('letter').classList.remove('open');
+  document.getElementById('answer').value = '';
+  dosStep = 0;
+  go('messenger');
+}
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') restart();
+});
 </script>
-
 </body>
 </html>

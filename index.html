@@ -1,0 +1,479 @@
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#090713">
+<title>Cyber Prank Control 2.0</title>
+<style>
+:root {
+  --bg:#090713;
+  --panel:#171323;
+  --line:#382c49;
+  --accent:#ff438f;
+  --cyan:#63eaff;
+  --text:#f8f5ff;
+  --muted:#aaa2ba;
+}
+*{box-sizing:border-box}
+body{
+ margin:0;background:
+ radial-gradient(ellipse at 15% 0%,#42133b 0,transparent 38%),
+ radial-gradient(ellipse at 90% 10%,#102b40 0,transparent 35%),
+ var(--bg);
+ color:var(--text);font:15px system-ui,Arial;min-height:100vh
+}
+button,input,textarea,select{font:inherit}
+button{cursor:pointer}
+.shell{max-width:1150px;margin:auto;padding:22px 16px 50px}
+header{display:flex;justify-content:space-between;gap:12px;align-items:center}
+.logo{font-weight:950;letter-spacing:3px}
+.logo span{color:var(--accent)}
+.status{font-size:11px;color:#9fffc9;border:1px solid #285342;padding:7px 12px;border-radius:30px}
+.hero{padding:40px 0 25px}
+.hero small,.tag{color:var(--cyan);letter-spacing:3px;font-size:10px}
+h1{font-size:clamp(32px,6vw,55px);line-height:1.05;margin:12px 0}
+h1 span{color:var(--accent);text-shadow:0 0 25px #ff438f66}
+.muted{color:var(--muted)}
+.layout{display:grid;grid-template-columns:205px 1fr;gap:16px}
+.nav,.card{
+ background:linear-gradient(145deg,#191525ee,#100e19f5);
+ border:1px solid var(--line);border-radius:18px;
+ box-shadow:0 15px 45px #0005
+}
+.nav{padding:10px;height:max-content;position:sticky;top:12px}
+.nav button{
+ display:block;width:100%;text-align:left;border:0;
+ background:transparent;color:#c9c2d5;padding:13px;
+ border-radius:11px;margin:2px 0
+}
+.nav button.active,.nav button:hover{background:#38213e;color:white}
+.card{padding:20px;margin-bottom:15px}
+.card h2{font-size:18px;margin:0 0 16px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.stat{padding:15px;border:1px solid var(--line);border-radius:13px;background:#0d0b15}
+.stat strong{display:block;font-size:25px}
+.stat small{color:var(--muted)}
+.formgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.field{margin:8px 0}
+.field.full{grid-column:1/-1}
+label{display:block;font-size:12px;color:var(--muted);margin-bottom:6px}
+input,textarea,select{
+ width:100%;padding:12px;border:1px solid #40364e;
+ border-radius:11px;background:#090812;color:white;outline:none
+}
+textarea{min-height:85px;resize:vertical}
+input:focus,textarea:focus,select:focus{border-color:var(--cyan)}
+.btn{
+ border:0;border-radius:11px;padding:12px 16px;
+ background:linear-gradient(100deg,var(--accent),#985cff);
+ color:white;font-weight:800
+}
+.btn.alt{background:#292235;border:1px solid #493d58}
+.btn.cyan{background:linear-gradient(100deg,#53dff5,#6b9dff);color:#071018}
+.btn.danger{background:#4a1c2d}
+.btnrow{display:flex;gap:9px;flex-wrap:wrap;margin-top:14px}
+.note{
+ font-size:12px;color:#d0c6dc;border-left:3px solid var(--accent);
+ background:#ff438f0d;padding:11px;margin-top:14px
+}
+.preview{
+ min-height:340px;display:grid;place-items:center;text-align:center;
+ position:relative;overflow:hidden;padding:25px;
+ border:1px solid #47304f;border-radius:16px;
+ background:radial-gradient(circle at 50% 40%,#35183d,#090811 70%)
+}
+.preview:before{
+ content:"";position:absolute;inset:-100% 0;
+ background:repeating-linear-gradient(0deg,transparent 0 4px,#ffffff09 5px);
+ animation:scan 8s linear infinite;pointer-events:none
+}
+@keyframes scan{to{transform:translateY(50px)}}
+.previewInner{position:relative;z-index:1;max-width:500px;width:100%}
+.orb{
+ width:78px;height:78px;margin:0 auto 20px;
+ border:1px solid var(--accent);border-radius:50%;
+ display:grid;place-items:center;color:var(--cyan);font-size:30px;
+ box-shadow:0 0 30px #ff438f66;
+ animation:pulse 2s infinite
+}
+@keyframes pulse{50%{transform:scale(1.07);filter:brightness(1.5)}}
+.preview h2{font-size:25px}
+.hidden{display:none!important}
+.list{display:grid;gap:10px}
+.item{padding:13px;border:1px solid var(--line);border-radius:12px;display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.item a{color:var(--cyan);overflow-wrap:anywhere}
+.screen{max-width:800px;margin:5vh auto;padding:16px}
+.terminal{
+ background:#05090c;border:1px solid #275344;color:#8fffc5;
+ text-align:left;white-space:pre-wrap;padding:16px;border-radius:12px;
+ font:13px/1.8 monospace;margin-top:18px
+}
+.incoming{
+ max-width:520px;margin:18px auto;background:#1b1426;
+ border:1px solid #744078;border-radius:15px;padding:18px;
+ text-align:left;animation:pop .6s both
+}
+.from{color:var(--accent);font-size:11px;letter-spacing:2px}
+.incoming p{font-size:18px}
+.letter{
+ max-width:520px;margin:18px auto;padding:20px;
+ background:linear-gradient(145deg,#f3e8d9,#d7c6b8);
+ color:#2b1b22;border-radius:8px;text-align:left;
+ animation:pop .8s both
+}
+.letter p{color:#2b1b22}
+@keyframes pop{
+ from{opacity:0;transform:translateY(20px) scale(.97)}
+ to{opacity:1;transform:none}
+}
+.glitch{animation:glitch .25s steps(2) 3}
+@keyframes glitch{
+ 25%{transform:translate(3px,-2px);text-shadow:-3px 0 red}
+ 50%{transform:translate(-2px,2px);text-shadow:3px 0 cyan}
+}
+.footer{text-align:center;color:#777185;font-size:11px;padding:20px}
+@media(max-width:740px){
+ .layout{grid-template-columns:1fr}
+ .nav{position:static;display:grid;grid-template-columns:repeat(3,1fr)}
+ .nav button{text-align:center;font-size:12px;padding:10px 4px}
+ .formgrid{grid-template-columns:1fr}
+ .field.full{grid-column:auto}
+ .stats{grid-template-columns:1fr 1fr}
+}
+@media(prefers-reduced-motion:reduce){
+ *,*:before,*:after{animation:none!important;transition:none!important}
+}
+</style>
+</head>
+<body>
+
+<div id="app" class="shell">
+<header>
+ <div class="logo">CYBER<span>PRANK</span> / CONTROL</div>
+ <div class="status">● SIMULATION MODE</div>
+</header>
+
+<section class="hero">
+ <small>SCENARIO COMMAND CENTER</small>
+ <h1>Создавай истории.<br><span>Управляй эффектами.</span></h1>
+ <p class="muted">Конструктор интерактивных кибер-сценариев.</p>
+</section>
+
+<div class="layout">
+<nav class="nav">
+ <button class="active" data-tab="dashboard">◈ Обзор</button>
+ <button data-tab="builder">＋ Генератор</button>
+ <button data-tab="effects">✧ Эффекты</button>
+ <button data-tab="links">↗ Мои ссылки</button>
+ <button data-tab="settings">⚙ Настройки</button>
+</nav>
+
+<main>
+<section id="dashboard" class="tab">
+ <div class="card">
+  <h2>Обзор панели</h2>
+  <div class="stats">
+   <div class="stat"><strong id="count">0</strong><small>Создано ссылок</small></div>
+   <div class="stat"><strong>4</strong><small>Цветовые темы</small></div>
+   <div class="stat"><strong>24/7</strong><small>Доступность сайта</small></div>
+  </div>
+  <p class="note">Сценарии создаются прямо в браузере. Это вымышленные визуальные истории, а не настоящий взлом.</p>
+ </div>
+ <div class="card">
+  <h2>Быстрый старт</h2>
+  <p class="muted">Настрой сценарий и получи ссылку для отправки.</p>
+  <button class="btn" onclick="tab('builder')">Создать сценарий</button>
+ </div>
+</section>
+
+<section id="builder" class="tab hidden">
+<div class="card">
+<h2>Редактор сценария</h2>
+<div class="formgrid">
+ <div class="field">
+  <label>Название</label>
+  <input id="title" maxlength="70" value="Секретное сообщение">
+ </div>
+ <div class="field">
+  <label>Имя отправителя</label>
+  <input id="sender" maxlength="40" value="НН">
+ </div>
+ <div class="field full">
+  <label>Вопрос на стартовом экране</label>
+  <input id="question" maxlength="180" value="Ты хочешь открыть секретное сообщение?">
+ </div>
+ <div class="field full">
+  <label>Входящее сообщение</label>
+  <textarea id="message" maxlength="700">У меня есть для тебя кое-что интересное...</textarea>
+ </div>
+ <div class="field full">
+  <label>Текст письма</label>
+  <textarea id="letter" maxlength="1000">Привет! Это интерактивная история. Никакого взлома не было.</textarea>
+ </div>
+ <div class="field">
+  <label>Финальная надпись</label>
+  <input id="ending" maxlength="160" value="Это была постановка!">
+ </div>
+ <div class="field">
+  <label>Цветовая тема</label>
+  <select id="theme">
+   <option value="pink">Neon Pink</option>
+   <option value="red">Cyber Red</option>
+   <option value="cyan">Black & Cyan</option>
+   <option value="purple">Purple Glitch</option>
+  </select>
+ </div>
+</div>
+<div class="btnrow">
+ <button class="btn" onclick="makeLink()">Создать ссылку</button>
+ <button class="btn alt" onclick="preview()">Предпросмотр</button>
+ <button class="btn alt" onclick="resetForm()">Сбросить</button>
+</div>
+<p class="note">Не выдавай вымышленную историю за настоящее системное предупреждение или сообщение реального человека.</p>
+<div id="newLink"></div>
+</div>
+
+<div class="card">
+<h2>Предпросмотр оформления</h2>
+<div class="preview">
+ <div class="previewInner">
+  <div class="orb">⌁</div>
+  <div class="tag">INCOMING TRANSMISSION</div>
+  <h2 id="previewTitle">Секретное сообщение</h2>
+  <p id="previewQuestion">Ты хочешь открыть секретное сообщение?</p>
+  <button class="btn" onclick="preview()">Открыть демо</button>
+ </div>
+</div>
+</div>
+</section>
+
+<section id="effects" class="tab hidden">
+<div class="card">
+<h2>Библиотека эффектов</h2>
+<div class="stats">
+ <div class="stat"><strong>GLITCH</strong><small>Цифровые помехи</small></div>
+ <div class="stat"><strong>SCAN</strong><small>Линии сканера</small></div>
+ <div class="stat"><strong>NEON</strong><small>Свечение</small></div>
+ <div class="stat"><strong>TYPE</strong><small>Псевдотерминал</small></div>
+ <div class="stat"><strong>LETTER</strong><small>Появление письма</small></div>
+ <div class="stat"><strong>THEMES</strong><small>4 темы</small></div>
+</div>
+<p class="note">Страница не сканирует телефон и не получает доступ к его файлам, камере или контактам.</p>
+</div>
+</section>
+
+<section id="links" class="tab hidden">
+<div class="card">
+<h2>Мои ссылки</h2>
+<div id="linkList" class="list"></div>
+<button class="btn danger" onclick="clearLinks()">Очистить список</button>
+</div>
+</section>
+
+<section id="settings" class="tab hidden">
+<div class="card">
+<h2>Настройки</h2>
+<label><input id="reduced" type="checkbox" style="width:auto"> Уменьшить анимации</label>
+<p class="note">История хранится локально в браузере. Очистка списка не отключает ранее созданные ссылки.</p>
+</div>
+</section>
+</main>
+</div>
+<div class="footer">CYBER PRANK CONTROL 2.0 • FICTIONAL EXPERIENCE</div>
+</div>
+
+<section id="experience" class="screen hidden">
+<div class="card preview">
+<div class="previewInner">
+ <div class="orb">⌁</div>
+ <div class="tag">UNKNOWN TRANSMISSION • FICTIONAL</div>
+ <h1 id="xTitle"></h1>
+ <p id="xQuestion"></p>
+ <button id="openStory" class="btn" onclick="runStory()">ОТКРЫТЬ СООБЩЕНИЕ</button>
+ <div id="terminal" class="terminal hidden"></div>
+ <div id="incoming" class="incoming hidden">
+  <div class="from">НОВОЕ СООБЩЕНИЕ • <span id="xSender"></span></div>
+  <p id="xMessage"></p>
+ </div>
+ <div id="letter" class="letter hidden">
+  <small>ЛИЧНОЕ ПИСЬМО</small>
+  <p id="xLetter"></p>
+ </div>
+ <h2 id="xEnding" class="hidden"></h2>
+ <p class="muted">Это постановочная история. Никакого доступа к устройству не выполняется.</p>
+ <button class="btn alt" onclick="closeStory()">× Закрыть</button>
+</div>
+</div>
+</section>
+
+<script>
+'use strict';
+const $=id=>document.getElementById(id);
+const KEY='cpc_links_v2';
+const colors={pink:'#ff438f',red:'#ff4545',cyan:'#63eaff',purple:'#b77bff'};
+let timers=[];
+
+function getList(){
+ try{return JSON.parse(localStorage.getItem(KEY)||'[]')}
+ catch{return []}
+}
+function tab(id){
+ document.querySelectorAll('.tab').forEach(x=>x.classList.add('hidden'));
+ $(id).classList.remove('hidden');
+ document.querySelectorAll('.nav button').forEach(x=>x.classList.toggle('active',x.dataset.tab===id));
+ if(id==='links')renderLinks();
+ updateCount();
+}
+document.querySelectorAll('.nav button').forEach(b=>b.onclick=()=>tab(b.dataset.tab));
+
+function formData(){
+ return {
+  title:$('title').value.trim()||'Секретное сообщение',
+  sender:$('sender').value.trim()||'НН',
+  question:$('question').value.trim(),
+  message:$('message').value.trim(),
+  letter:$('letter').value.trim(),
+  ending:$('ending').value.trim(),
+  theme:$('theme').value
+ };
+}
+function encode(data){
+ return btoa(unescape(encodeURIComponent(JSON.stringify(data))))
+  .replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
+}
+function decode(value){
+ value=value.replace(/-/g,'+').replace(/_/g,'/');
+ while(value.length%4)value+='=';
+ return JSON.parse(decodeURIComponent(escape(atob(value))));
+}
+function makeLink(){
+ const data=formData();
+ const url=location.href.split('#')[0]+'#story='+encode(data);
+ const list=getList();
+ list.unshift({title:data.title,url});
+ localStorage.setItem(KEY,JSON.stringify(list.slice(0,100)));
+ const box=$('newLink');
+ box.replaceChildren();
+ const a=document.createElement('a');
+ a.href=url;a.textContent=url;
+ a.style.cssText='display:block;overflow-wrap:anywhere;color:var(--cyan);margin:15px 0';
+ const b=document.createElement('button');
+ b.className='btn cyan';b.textContent='Копировать ссылку';
+ b.onclick=()=>copy(url,b);
+ box.append(a,b);
+ updateCount();
+}
+async function copy(value,button){
+ try{
+  await navigator.clipboard.writeText(value);
+  button.textContent='Скопировано!';
+ }catch{
+  prompt('Скопируй ссылку:',value);
+ }
+}
+function preview(){startStory(formData())}
+function resetForm(){
+ $('title').value='Секретное сообщение';
+ $('sender').value='НН';
+ $('question').value='Ты хочешь открыть секретное сообщение?';
+ $('message').value='У меня есть для тебя кое-что интересное...';
+ $('letter').value='Привет! Это интерактивная история. Никакого взлома не было.';
+ $('ending').value='Это была постановка!';
+ $('theme').value='pink';
+ updatePreview();
+}
+function updatePreview(){
+ $('previewTitle').textContent=$('title').value;
+ $('previewQuestion').textContent=$('question').value;
+}
+['title','question'].forEach(id=>$(id).addEventListener('input',updatePreview));
+
+function renderLinks(){
+ const box=$('linkList');
+ box.replaceChildren();
+ const list=getList();
+ if(!list.length){
+  box.textContent='Пока нет созданных ссылок.';
+  return;
+ }
+ list.forEach(item=>{
+  const row=document.createElement('div');row.className='item';
+  const a=document.createElement('a');a.href=item.url;a.textContent=item.title;
+  const b=document.createElement('button');b.className='btn alt';b.textContent='Копировать';
+  b.onclick=()=>copy(item.url,b);
+  row.append(a,b);box.append(row);
+ });
+}
+function clearLinks(){
+ if(confirm('Очистить список на этом устройстве?')){
+  localStorage.removeItem(KEY);renderLinks();updateCount();
+ }
+}
+function updateCount(){$('count').textContent=getList().length}
+
+function startStory(data){
+ document.documentElement.style.setProperty('--accent',colors[data.theme]||colors.pink);
+ $('app').classList.add('hidden');
+ $('experience').classList.remove('hidden');
+ $('xTitle').textContent=data.title;
+ $('xQuestion').textContent=data.question;
+ $('xSender').textContent=data.sender;
+ $('xMessage').textContent=data.message;
+ $('xLetter').textContent=data.letter;
+ $('xEnding').textContent=data.ending;
+ document.title=data.title+' — Cyber Experience';
+}
+function runStory(){
+ timers.forEach(t=>{clearTimeout(t);clearInterval(t)});
+ timers=[];
+ $('openStory').classList.add('hidden');
+ $('terminal').classList.remove('hidden');
+ $('terminal').textContent='';
+ const lines=[
+  '> Запуск визуальной истории...',
+  '> Загрузка декоративных эффектов...',
+  '> Подготовка входящего сообщения...',
+  '> Канал анимации готов.',
+  '> Это симуляция. Устройство не сканируется.'
+ ];
+ let i=0;
+ const interval=setInterval(()=>{
+  $('terminal').textContent+=lines[i]+'\n';
+  $('terminal').classList.add('glitch');
+  timers.push(setTimeout(()=>$('terminal').classList.remove('glitch'),350));
+  i++;
+  if(i===lines.length){
+   clearInterval(interval);
+   timers.push(setTimeout(()=>$('incoming').classList.remove('hidden'),600));
+   timers.push(setTimeout(()=>$('letter').classList.remove('hidden'),1700));
+   timers.push(setTimeout(()=>$('xEnding').classList.remove('hidden'),2800));
+  }
+ },620);
+ timers.push(interval);
+}
+function closeStory(){
+ timers.forEach(t=>{clearTimeout(t);clearInterval(t)});
+ timers=[];
+ location.hash='';
+ $('experience').classList.add('hidden');
+ $('app').classList.remove('hidden');
+ ['terminal','incoming','letter','xEnding'].forEach(id=>$(id).classList.add('hidden'));
+ $('openStory').classList.remove('hidden');
+ document.title='Cyber Prank Control 2.0';
+}
+function route(){
+ if(location.hash.startsWith('#story=')){
+  try{startStory(decode(location.hash.slice(7)))}
+  catch{$('app').classList.remove('hidden');alert('Ссылка повреждена.')}
+ }
+}
+$('reduced').addEventListener('change',e=>{
+ document.body.classList.toggle('less-motion',e.target.checked);
+});
+updateCount();
+route();
+</script>
+</body>
+</html>
